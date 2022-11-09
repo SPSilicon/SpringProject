@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="kr">
+  <head>
+    <title>Hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  </head>
+  <body>
+    <script src="vendor/popper/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+
+    <button class="btn-primary" onClick="startCapture()">1234</button>
+    <button class="btn-primary" id="start">mediastart</button>
+    <button class="btn-primary" id="stop">mediaend</button>
+    <video id="video" style="
+      border: 1px solid #999;
+      width: 98%;
+      max-width: 860px;
+    " autoplay></video>
+    <script src="js/getusrMedia.js"></script>
+  
+  </body>
+</html>

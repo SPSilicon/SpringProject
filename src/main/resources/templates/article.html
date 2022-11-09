@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf=8" />
+        <title>게시글</title>
+    </head>
+    <body>
+        <tbody>
+            <tr th:each="article : ${article}">
+                <td th:text="${article.id}">번호</td>
+                <td th:text="${article.title}">제목</td>
+                <td th:text="${article.author}">작성자</td>
+                <td th:text="${article.wdate}">날짜</td>
+                <td th:text="${article.views}">조회수</td>
+            </tr>
+        </tbody>
+    </body>
+</html>
