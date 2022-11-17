@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +14,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -25,8 +23,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable()
                 .authorizeRequests((authorizeRequests) -> authorizeRequests
-                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**").permitAll()
+                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**", "/stream/**")
+                        .permitAll()
                         .antMatchers("/**").hasRole("USER"))
                 .formLogin((formLogin) -> formLogin
                         .usernameParameter("username")
@@ -35,7 +37,6 @@ public class SecurityConfig {
                         .failureUrl("/login?error")
                         .permitAll());
 
-        http.cors().and().csrf().disable();
         return http.build();
     }
 

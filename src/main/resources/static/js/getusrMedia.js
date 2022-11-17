@@ -1,21 +1,24 @@
 // Put variables in global scope to make them available to the browser console.
+
 const videoElem = document.getElementById('video');
 const stopbutton = document.getElementById('stop');
 const startbutton = document.getElementById('start');
-const gdmOptions = {
-    video: {
-      cursor: "always"
-    },
-    audio: {
-      echoCancellation: true,
-      noiseSuppression: true,
-      sampleRate: 44100
-    }
-  }
+const streamName = document.getElementById('sName');
+const streamStart = document.getElementById('sStart');
+var sock;
 
 async function startCapture() {
     let captureStream = null;
-  
+    const gdmOptions = {
+      video: {
+        cursor: "always"
+      },
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        sampleRate: 44100
+      }
+    }  
     try {
         videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(gdmOptions);
         dumpOptionsInfo();
@@ -24,9 +27,38 @@ async function startCapture() {
     }
 }
 
-stopbutton.onclick=startRecord;
+streamStart.addEventListener('click',function (event) {
+  conn("wss://spsi.kro.kr/stream");
+});
 
-function download(chunks) {
+function conn(serverURL) {
+  
+  try{
+    sock = new WebSocket(serverURL);
+    
+    sock.addEventListener('open',function (event) {
+      console.log("연결됨 :",event);
+    });
+  } catch(e){
+    console.error(`에러 : ${e}`);
+  }
+
+}
+
+function send(blob) {
+  try {
+
+    sock.send(blob);
+    
+  } catch(e) {
+    console.log("에러!",e);
+  }
+
+}
+
+
+function download(data) {
+    const chunks = [data];
     const blob = new Blob(chunks, {
       type: "video/webm"
     });
@@ -40,24 +72,32 @@ function download(chunks) {
     window.URL.revokeObjectURL(url);
   }
 
-
+  
+stopbutton.onclick=startRecord;
 function startRecord() {
-    const stream = videoElem.captureStream(30);
-    const options = { mimeType: "video/webm;" };
+    const stream = videoElem.captureStream(60);
+    const options = { 
+                      audioBitsPerSecond : 128000,
+                      videoBitsPerSecond : 2500000,
+                      mimeType: 'video/webm;'
+  };
     const mediaRecorder = new MediaRecorder(stream, options);
-    const recordedChunks = [];
-
+    
+    //const recordedChunks = [];
     handleDataAvailable = (event)=> {
+      
         console.log("data-available");
-        if(event.data.size > 0) {
-            recordedChunks.push(event.data);
-            console.log(recordedChunks);
-            download(recordedChunks);
-        }
+      if(event.data.size > 0) {
+          //recordedChunks.push(event.data);
+          //console.log(recordedChunks);
+          console.log(event.data);
+          //download(event.data);
+          if(conn) send(event.data);
+      }
     };
 
     mediaRecorder.ondataavailable = handleDataAvailable;
-    mediaRecorder.start();
+    mediaRecorder.start(10);
     stopbutton.innerHTML="녹화중";
 
     stopbutton.onclick = (e)=>{

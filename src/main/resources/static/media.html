@@ -12,13 +12,14 @@
     
 
     <button class="btn-primary" onClick="startCapture()">1234</button>
-    <button class="btn-primary" id="start">mediastart</button>
-    <button class="btn-primary" id="stop">mediaend</button>
+    <button class="btn-primary" id="stop">녹화시작하기</button>
+    <input id="sName">스트림이름</input>
+    <button class="btn-primary" id="sStart">스트림 연결</button>
     <video id="video" style="
       border: 1px solid #999;
       width: 98%;
       max-width: 860px;
-    " autoplay></video>
+    " autoplay muted></video>
     <script src="js/getusrMedia.js"></script>
   
   </body>

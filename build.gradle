@@ -19,6 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'net.bramp.ffmpeg:ffmpeg:0.7.0'
 	runtimeOnly 'mysql:mysql-connector-java'
 	//runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
