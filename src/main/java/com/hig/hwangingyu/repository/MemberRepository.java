@@ -11,7 +11,7 @@ public interface MemberRepository {
 
     Optional<Member> findByName(String name);
 
-    List<String> getAuthoritiesByName(String name);
+    //List<String> getAuthoritiesByName(String name);
 
     List<Member> findAll();
 }

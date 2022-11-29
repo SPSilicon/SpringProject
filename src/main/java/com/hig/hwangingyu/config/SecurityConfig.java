@@ -23,11 +23,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
-                .csrf().disable()
                 .authorizeRequests((authorizeRequests) -> authorizeRequests
-                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**", "/stream/**")
+                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**", "/stream/**","/member/register")
                         .permitAll()
                         .antMatchers("/**").hasRole("USER"))
                 .formLogin((formLogin) -> formLogin
@@ -35,7 +32,10 @@ public class SecurityConfig {
                         .passwordParameter("password")
                         .loginPage("/login")
                         .failureUrl("/login?error")
-                        .permitAll());
+                        .permitAll())
+                        .cors().configurationSource(corsConfigurationSource())
+                        .and()
+                        .csrf().disable();
 
         return http.build();
     }
@@ -43,7 +43,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

@@ -31,7 +31,7 @@ public class MemberController {
     public String login() {
         return "login.html";
     }
-
+    /*
     @PostMapping("member/register")
     public String register(Member memberForm, Model model) {
         
@@ -47,7 +47,8 @@ public class MemberController {
         
 
     }
-
+     */
+    
     /*
     @PostMapping("member/login")
     public String login(Member memberForm, Model model) {

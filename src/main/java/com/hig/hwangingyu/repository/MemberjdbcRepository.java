@@ -45,12 +45,12 @@ public class MemberjdbcRepository implements MemberRepository {
         jdbcUserDetailsManager.createUser(member);
     }
 
-    @Override
-    public List<String> getAuthoritiesByName(String name) {
-        List<String> ret = jdbcTemplate.query("select authority from authorities where username=?", authRowMapper(),
-                name);
-        return ret;
-    }
+   // @Override
+    //public List<String> getAuthoritiesByName(String name) {
+    //    List<String> ret = jdbcTemplate.query("select authority from authorities where username=?", authRowMapper(),
+   //             name);
+   //     return ret;
+   // }
 
     @Override
     public List<Member> findAll() {
