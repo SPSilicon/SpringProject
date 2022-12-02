@@ -33,12 +33,12 @@ public class MemberjdbcRepository implements MemberRepository {
         };
     }
 
-    private RowMapper<String> authRowMapper() {
-        return (rs, rowNum) -> {
-            String ret = rs.getString("name");
-            return ret;
-        };
-    }
+    //private RowMapper<String> authRowMapper() {
+    //    return (rs, rowNum) -> {
+    //        String ret = rs.getString("name");
+    //        return ret;
+     //   };
+    //}
 
     @Override
     public void register(UserDetails member) {
