@@ -38,6 +38,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             .withClaim("auth",authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
             .sign(algorithm);
             jwtCookie = new Cookie("AUTHORIZATION", token);
+            jwtCookie.setMaxAge(30*60);
         } catch (JWTCreationException exception) {
             
         }
