@@ -55,14 +55,12 @@ public class MemberjdbcRepository implements MemberRepository {
     @Override
     public List<Member> findAll() {
         List<Member> ret = jdbcTemplate.query("select * from member", memberRowMapper());
-        // TODO Auto-generated method stub
         return ret;
     }
 
     @Override
     public Optional<Member> findByName(String name) {
         List<Member> ret = jdbcTemplate.query("select * from users where username = ?", memberRowMapper(), name);
-        // TODO Auto-generated method stub
         return ret.stream().findFirst();
     }
 

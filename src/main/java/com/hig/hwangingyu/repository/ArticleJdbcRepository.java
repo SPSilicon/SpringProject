@@ -52,14 +52,12 @@ public class ArticleJdbcRepository implements ArticleRepository {
     public int delete(long id) {
         int rows = jdbcTemplate.update("delete from article where id =?", id);
         return rows;
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public Optional<Article> findbyId(long id) {
         List<Article> ret = jdbcTemplate.query("select * from article where id=?", articleRowMapper(), id);
-        // TODO Auto-generated method stub
         return ret.stream().findFirst();
     }
 
@@ -67,14 +65,12 @@ public class ArticleJdbcRepository implements ArticleRepository {
     public void update(Article article) {
         jdbcTemplate.update("update article set body = ? where id =?", article.getBody(), article.getId());
         jdbcTemplate.update("update article set title = ? where id =?", article.getBody(), article.getId());
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public List<Article> findAll() {
         List<Article> ret = jdbcTemplate.query("select * from article", articleRowMapper());
-        // TODO Auto-generated method stub
         return ret;
     }
 

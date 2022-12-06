@@ -10,6 +10,7 @@ import com.hig.hwangingyu.repository.ArticleRepository;
 import com.hig.hwangingyu.repository.MemberRepository;
 import com.hig.hwangingyu.repository.MemberjdbcRepository;
 import com.hig.hwangingyu.service.MemberService;
+
 import com.hig.hwangingyu.service.ArticleService;
 
 @Configuration
@@ -32,5 +33,7 @@ public class Config {
 
     @Bean
     public MemberService memberService() { return new MemberService(memberRepository());}
+
+
 
 }

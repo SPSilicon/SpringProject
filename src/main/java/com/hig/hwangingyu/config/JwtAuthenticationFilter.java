@@ -18,7 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.JWT;
@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
+       
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for(Cookie cookie : cookies) {
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                     Algorithm algorithm = Algorithm.HMAC256(secret);
                     JWTVerifier verifier = JWT.require(algorithm)
                         .withClaimPresence("username")
-                        //.withClaimPresence("password")
+                        //.withClaimPresence("password") 비밀번호는 저장하지 않음
                         .withClaimPresence("auth")
                         .build();
     

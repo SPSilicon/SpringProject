@@ -2,7 +2,7 @@ package com.hig.hwangingyu.config;
 
 import java.util.Map;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -20,15 +20,15 @@ import com.hig.hwangingyu.service.SocketWebmHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SocketWebmHandler(), "/stream/share/{token}")
+        registry.addHandler( new SocketWebmHandler(),"/stream/share/{token}")
                 .setAllowedOriginPatterns("*")
                 .addInterceptors(new HttpSessionHandshakeInterceptor() {
                     @Override
                     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                             WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-                        // TODO Auto-generated method stub
 
                         System.out.println("Request ----------" +request.getHeaders());
 
