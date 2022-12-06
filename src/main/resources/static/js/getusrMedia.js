@@ -5,12 +5,13 @@ const audioSelect = document.querySelector('select#aud');
 const videoSelect = document.querySelector('select#vid');
 const streamStatus = document.querySelector('label#streamStatus');
 const recordRow = document.querySelector("div#recordRow");
+var count =0;
+var bytePerSecond =0;
 var sock;
 
 
 function capture() {
   var checked = document.querySelector('input[name="captureMethod"]:checked').value;
-
   if(checked=='scrn') {
     startCapture();
   } else if(checked=='dvc') {
@@ -42,11 +43,10 @@ async function startCapture() {
     await navigator.mediaDevices.getDisplayMedia(gdmOptions).then(gotStream);
     dumpOptionsInfo();
   } catch (err) {
+    alert(err);
     console.error(`Error: ${err}`);
   }
 }
-
-
 
 streamStart.onclick = function (event) {
 
@@ -65,7 +65,6 @@ function conn(serverURL) {
       console.log("연결됨 :",event);
       streamStatus.textContent="연결됨"
     });
-
     sock.onclose = function() {
         console.log("closed");
         streamStatus.textContent="연결 끊어짐"
@@ -75,36 +74,40 @@ function conn(serverURL) {
 
     console.error(`에러 : ${e}`);
   }
-
 }
   
 
 
-startbutton.onclick=startRecord;
 function startRecord() {
-  if(videoElem.srcObject == null) {
-    alert("캡쳐가 필요합니다.");
-    return;
-  } else if(sock == null||sock.readyState == WebSocket.CLOSED) {
-    alert("스트림 연결이 필요합니다.");
-    return;
-  } 
-  const stream = videoElem.srcObject;
-  const options = { 
-                    audioBitsPerSecond : 128000,
-                    videoBitsPerSecond : 13000000,
-                    mimeType: 'video/x-matroska;codecs=h264'
-  };
+
+    if(videoElem.srcObject == null) {
+      alert("캡쳐가 필요합니다.");
+      return;
+    } else if(sock == null||sock.readyState == WebSocket.CLOSED) {
+      alert("스트림 연결이 필요합니다.");
+      return;
+    } 
+    const stream = videoElem.srcObject;
+    const options = { 
+                      audioBitsPerSecond : 128000,
+                      videoBitsPerSecond : 13000000,
+                      mimeType: 'video/x-matroska'
+    };
     const mediaRecorder = new MediaRecorder(stream, options);
     
     handleDataAvailable = (event)=> {
       if(event.data.size > 0) {
-          //console.log(event.data);
           if(sock.readyState==WebSocket.OPEN){
             try {
-              recordRow.lastChild.nodeValue = event.data.size+"바이트 전송";
+              bytePerSecond += event.data.size;
+              if(++count>=10) {
+                recordRow.lastChild.nodeValue = ""+Math.round( (bytePerSecond/1000)/10 )+ "kBps";
+                bytePerSecond =0;
+              }
               sock.send(event.data);
+              event.data = null; // 메모리 초기화 (gc가 알아서 처리하게 null로 바꿈)
             } catch(e) {
+              alert(e);
               console.log("에러!",e);
             }
           }
@@ -112,14 +115,14 @@ function startRecord() {
     };
 
     mediaRecorder.ondataavailable = handleDataAvailable;
-    mediaRecorder.start(1);
+    mediaRecorder.start(100);
 
     startbutton.innerHTML="송출중";
     const streamName = document.getElementById('sName').value;
     recordRow.appendChild(document.createTextNode("spsi.kro.kr/stream/play/"+streamName));
     recordRow.appendChild(document.createTextNode("전송중 ..."));
 
-    startbutton.onclick = (e)=>{
+    startbutton.onclick = e=> {
       console.log("stopping");
       mediaRecorder.stop();
       sock.close();
@@ -129,76 +132,91 @@ function startRecord() {
       startbutton.innerHTML="송출시작하기";
     };
 }
+
+
+
 function dumpOptionsInfo() {
-    const videoTrack = videoElem.srcObject.getVideoTracks()[0];
-  
-    console.info("Track settings:");
-    console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
-    console.info("Track constraints:");
-    console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
-  }
+  const videoTrack = videoElem.srcObject.getVideoTracks()[0];
+
+  console.info("Track settings:");
+  console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+  console.info("Track constraints:");
+  console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+}
 
 
 
-  function gotStream(stream) {
-    window.stream = stream; // make stream available to console
-    videoElem.srcObject = stream;
-    // Refresh button list in case labels have become available
-    return navigator.mediaDevices.enumerateDevices();
-  }
+function gotStream(stream) {
+  window.stream = stream; // make stream available to console
+  videoElem.srcObject = stream;
+  // Refresh button list in case labels have become available
+  return navigator.mediaDevices.enumerateDevices();
+}
 
+
+function gotDevices(deviceInfos) {
+  // Handles being called several times to update labels. Preserve values.
   const selectors = [audioSelect, videoSelect];
-  function gotDevices(deviceInfos) {
-    // Handles being called several times to update labels. Preserve values.
-    const values = selectors.map(select => select.value);
-    selectors.forEach(select => {
-      while (select.firstChild) {
-        select.removeChild(select.firstChild);
-      }
-    });
-    for (let i = 0; i !== deviceInfos.length; ++i) {
-      const deviceInfo = deviceInfos[i];
-      const option = document.createElement('option');
-      option.value = deviceInfo.deviceId;
-      if (deviceInfo.kind === 'audioinput') {
-        option.text = deviceInfo.label || `microphone ${audioSelect.length + 1}`;
-        audioSelect.appendChild(option);
-      } else if (deviceInfo.kind === 'videoinput') {
-        option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-        videoSelect.appendChild(option);
-      } else {
-        console.log('Some other kind of source/device: ', deviceInfo);
-      }
+  const values = selectors.map(select => select.value);
+  selectors.forEach(select => {
+    while (select.firstChild) {
+      select.removeChild(select.firstChild);
     }
-    
-    selectors.forEach((select, selectorIndex) => {
-      if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-        select.value = values[selectorIndex];
-      }
-    });
+  });
+  for (let i = 0; i !== deviceInfos.length; ++i) {
+    const deviceInfo = deviceInfos[i];
+    const option = document.createElement('option');
+    option.value = deviceInfo.deviceId;
+    if (deviceInfo.kind === 'audioinput') {
+      option.text = deviceInfo.label || `microphone ${audioSelect.length + 1}`;
+      audioSelect.appendChild(option);
+    } else if (deviceInfo.kind === 'videoinput') {
+      option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+      videoSelect.appendChild(option);
+    } else {
+      console.log('Some other kind of source/device: ', deviceInfo);
+    }
   }
-  navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+  
+  selectors.forEach((select, selectorIndex) => {
+    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+      select.value = values[selectorIndex];
+    }
+  });
+}
 
-
-  function init() {
+function init() {
+  try {
     if (window.stream) {
       window.stream.getTracks().forEach(track => {
         track.stop();
       });
     }
+    navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+    startbutton.onclick=startRecord;
     const audioSource = audioSelect.value;
     const videoSource = videoSelect.value;
-    const constraints = {
+    var constraints = {
       audio: {noiseSuppression: false, deviceId: audioSource ? {exact: audioSource} : undefined},
       video: { width: { ideal: 1920 }, height: { ideal: 1080 }, deviceId: videoSource ? {exact: videoSource} : undefined}
     };
-    navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+    if(/iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent)) {
+      constraints = {
+        audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
+        video: {facingMode: "user", deviceId: videoSource ? {exact: videoSource} : undefined}
+      };
+    }
+  } catch(e) {
+    alert(e);
   }
-  function handleError(error) {
-    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
-  }
+  navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+}
+function handleError(error) {
+  
+  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+}
 
-  audioSelect.onchange = init;
-  videoSelect.onchange = init;
-  init();
+audioSelect.onchange = init;
+videoSelect.onchange = init;
+init();
  
