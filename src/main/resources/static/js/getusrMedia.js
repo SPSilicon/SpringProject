@@ -124,8 +124,13 @@ function startRecord() {
 
     startbutton.onclick = e=> {
       console.log("stopping");
-      mediaRecorder.stop();
-      sock.close();
+      if(mediaRecorder.state == "recording") {
+        mediaRecorder.stop();
+      }
+      if(sock.readyState==WebSocket.OPEN) {
+        sock.close();
+      }
+      
       recordRow.removeChild(recordRow.lastChild);
       recordRow.removeChild(recordRow.lastChild);
       startbutton.onclick=startRecord;
