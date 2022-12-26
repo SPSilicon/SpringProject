@@ -3,6 +3,9 @@ package com.hig.hwangingyu.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.hig.hwangingyu.domain.Article;
 import com.hig.hwangingyu.repository.ArticleRepository;
 
@@ -26,5 +29,8 @@ public class ArticleService {
 
     public List<Article> findAll() {
         return articleRepository.findAll();
+    }
+    public Page<Article> findAll(Pageable page) {
+        return articleRepository.findAll(page);
     }
 }

@@ -1,5 +1,6 @@
 package com.hig.hwangingyu.repository;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,9 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -28,6 +32,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
                     .setAuthor(rs.getString("author"))
                     .setBody(rs.getString("body"))
                     .setTitle(rs.getString("title"))
+                    .setWdate(rs.getDate("wdate"))
                     .setId(rs.getLong("id"))
                     .build();
             return article;
@@ -40,9 +45,9 @@ public class ArticleJdbcRepository implements ArticleRepository {
         jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
         Map<String, Object> params = new HashMap<>();
         params.put("title", article.getTitle());
-        params.put("body", article.getBody());
         params.put("author", article.getAuthor());
-
+        params.put("body", article.getBody());
+        params.put("wdate", java.sql.Timestamp.valueOf(LocalDateTime.now()));
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(params));
         article.setId(key.longValue());
         return key.longValue();
@@ -72,6 +77,17 @@ public class ArticleJdbcRepository implements ArticleRepository {
     public List<Article> findAll() {
         List<Article> ret = jdbcTemplate.query("select * from article", articleRowMapper());
         return ret;
+    }
+
+    
+    public int getCount() {
+        return jdbcTemplate.queryForObject("select count(*) from article",Integer.class);
+    }
+
+    public Page<Article> findAll(Pageable page) {
+        List<Article> ret = jdbcTemplate.query("select * from article limit "+page.getPageSize() + " offset "+page.getOffset(),articleRowMapper());
+        
+        return new PageImpl<Article>(ret, page, getCount());
     }
 
 }
