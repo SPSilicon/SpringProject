@@ -32,7 +32,7 @@ public class SecurityConfig {
         
         http
                 .authorizeRequests((authorizeRequests) -> authorizeRequests
-                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**", "/stream/**","/member/register")
+                        .antMatchers("/html/**", "/css/**", "/img/**", "/js/**", "/vendor/**", "/scss/**", "/stream/*/play","/member/register")
                         .permitAll()
                         .antMatchers("/**").hasRole("USER"))
                 .formLogin((formLogin) -> formLogin
