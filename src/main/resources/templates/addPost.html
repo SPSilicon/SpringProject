@@ -3,12 +3,41 @@
     <head>
         <meta charset="utf=8" />
         <title>게시글쓰기</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
     </head>
     <body>
+
+    <script src="/vendor/popper/popper.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <div class="container-xxl mt-5 text-center" style="max-height : 70%">
         <form action="/post/add" method="post">
-            <input type="text" name="title">
-            <input type="text" name="body">
-            <button type="submit">글쓰기</button>
+            <div class="row">
+                <div class ="col-sm-1">
+                    제목
+                </div>
+                <div class ="col-sm-9">
+                    <input class="form-control" type="text" name="title">
+                </div>
+            </div>
+            <div class="row" style="height:500px">
+
+                <div class ="col-sm-1">
+                     내용
+                </div>
+                <div class ="col-sm-9">
+                        <textarea class="form-control" name="body" cols="50" style="resize:none; height:100%;"></textarea>        
+                </div>
+            </div>
+            <div class="row">
+                <div class ="col-sm-9"></div>
+                <div class ="col-sm-1">
+                    <button class="btn btn-primary" type="submit">글쓰기</button>
+                </div>
+                
+            </div>
+
         </form>
+    </div>
     </body>
 </html>
