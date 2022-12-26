@@ -2,7 +2,6 @@ package com.hig.hwangingyu.config;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -23,7 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler( new SocketWebmHandler(),"/stream/share/{token}")
+        registry.addHandler( new SocketWebmHandler(),"/stream/share/{token}/{listen}")
                 .setAllowedOriginPatterns("*")
                 .addInterceptors(new HttpSessionHandshakeInterceptor() {
                     @Override
@@ -34,10 +33,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
                         String path = request.getURI().getPath();
                         System.out.println("PATH  " + path);
-                        
+                        int st = path.lastIndexOf("share/")+6;
                         int index = path.lastIndexOf("/");
-                        String streamName = path.substring(index+1);
+                        String streamName = path.substring(st,index);
+                        String listen = path.substring(index+1);
                         attributes.put("streamName", streamName);
+                        attributes.put("listen",listen);
+                        
 
                         return super.beforeHandshake(request, response, wsHandler, attributes);
                         
