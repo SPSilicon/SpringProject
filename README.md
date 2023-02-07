@@ -8,13 +8,13 @@
 <h2>로그인, 회원가입</h2>
 <h2>글쓰기 삭제 수정 열람</h2>
 
-<ul>
-Database : Mariadb
 
-spring dataSource driver : mysql
+<ul>Database : Mariadb</ul>
 
-jdbcTemplate사용
-</ul>
+<ul>spring dataSource driver : mysql</ul>
+
+<ul>jdbcTemplate사용</ul>
+
 
 
 
