@@ -2,6 +2,8 @@ package com.hig.hwangingyu.config;
 
 import java.util.Map;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -13,16 +15,18 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-import com.hig.hwangingyu.service.SocketWebmHandler;
+import com.hig.hwangingyu.handler.SocketWebmHandler;
 
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    @Autowired
+    private SocketWebmHandler socketWebmHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler( new SocketWebmHandler(),"/stream/share/{token}/{listen}")
+        registry.addHandler( socketWebmHandler,"/stream/share/{token}/{listen}")
                 .setAllowedOriginPatterns("*")
                 .addInterceptors(new HttpSessionHandshakeInterceptor() {
                     @Override
@@ -30,7 +34,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
                             WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 
                         System.out.println("Request ----------" +request.getHeaders());
-
+                        
                         String path = request.getURI().getPath();
                         System.out.println("PATH  " + path);
                         int st = path.lastIndexOf("share/")+6;
@@ -56,5 +60,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
         container.setMaxBinaryMessageBufferSize(10000000);
         return container;
     }
+
+  
 
 }
