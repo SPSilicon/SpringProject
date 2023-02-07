@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf=8" />
+        <title>게시글수정</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    </head>
+    <body>
+
+    <script src="/vendor/popper/popper.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <div class="container-xxl mt-5 text-center" style="max-height : 70%">
+        <form th:action="@{/post/update}" method="post">
+            <input class="form-control" type="hidden" name="id" th:value="${article.id}">
+            <input class="form-control" type="hidden" name="author" th:value="${article.author}">
+            <div class="row">
+                <div class ="col-sm-1">
+                    제목
+                </div>
+                <div class ="col-sm-9">
+                    <input class="form-control" type="text" name="title" th:value="${article.title}">
+                </div>
+            </div>
+            <div class="row" style="height:500px">
+                <div class ="col-sm-1">
+                     내용
+                </div>
+                <div class ="col-sm-9">
+                        <textarea class="form-control" name="body" cols="50" style="resize:none; height:100%;" th:value="${article.body}"></textarea>        
+                </div>
+            </div>
+            <div class="row">
+                <div class ="col-sm-9"></div>
+                <div class ="col-sm-1">
+                    <button class="btn btn-primary" type="submit">수정</button>
+                </div>
+                
+            </div>
+
+        </form>
+    </div>
+    </body>
+</html>
