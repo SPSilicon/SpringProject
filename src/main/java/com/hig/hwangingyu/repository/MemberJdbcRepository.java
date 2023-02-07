@@ -14,11 +14,11 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import com.hig.hwangingyu.domain.Member;
 
-public class MemberjdbcRepository implements MemberRepository {
+public class MemberJdbcRepository implements MemberRepository {
     private final JdbcTemplate jdbcTemplate;
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
 
-    public MemberjdbcRepository(DataSource dataSource) {
+    public MemberJdbcRepository(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
     }
