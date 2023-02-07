@@ -1,16 +1,17 @@
 package com.hig.hwangingyu.domain;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 public class Article {
     private Long id;
     private String title;
     private String body;
     private String author;
-    private Date wdate;
+    private Timestamp wdate;
     private Integer views;
 
-    public Date getWdate() {
+    public Timestamp getWdate() {
         return wdate;
     }
 
@@ -34,6 +35,10 @@ public class Article {
         return body;
     }
 
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -44,7 +49,7 @@ public class Article {
 
 
 
-    private Article(Long id, String title, String body, String author, Date wdate, Integer views) {
+    private Article(Long id, String title, String body, String author, Timestamp wdate, Integer views) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -58,7 +63,7 @@ public class Article {
         String title;
         String body;
         String author;
-        Date wdate;
+        Timestamp wdate;
         Integer views;
 
         public Builder() {
@@ -68,7 +73,7 @@ public class Article {
             author = "글쓴이";
         }
 
-        public Builder setWdate(Date wdate) {
+        public Builder setWdate(Timestamp wdate) {
             this.wdate = wdate;
             return this;
         }
