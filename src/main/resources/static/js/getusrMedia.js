@@ -1,6 +1,6 @@
 const videoElem = document.getElementById('video');
-const startbutton = document.getElementById('start');
-const streamStart = document.getElementById('sStart');
+const recStartButton = document.getElementById('start');
+const streamConnect = document.getElementById('sStart');
 const audioSelect = document.querySelector('select#aud');
 const videoSelect = document.querySelector('select#vid');
 const streamStatus = document.querySelector('label#streamStatus');
@@ -48,25 +48,37 @@ async function startCapture() {
   }
 }
 
-streamStart.onclick = function (event) {
-
+streamConnect.onclick = function (event) {
+  var checked = document.querySelector('input[name="captureMethod"]:checked').value;
   if(sock == null ||sock.readyState == WebSocket.CLOSED) {
     var streamName = document.getElementById('sName').value;
-    conn("wss://spsi.kro.kr/stream/share/"+streamName);
+    if(streamName=="") {
+      alert("스트림 이름을 입력하세요");
+      return;
+    }
+    var listen;
+    if(checked=="rtmp") listen="1"; else listen ="0";
+    conn("wss://spsi.kro.kr/stream/share/",streamName, listen);
   } else if(sock.readyState == WebSocket.OPEN) {
     sock.close();
   }
 };
 
-function conn(serverURL) {
+function conn(serverURL,streamName,listen) {
   try{
-    sock = new WebSocket(serverURL);
+    sock = new WebSocket(serverURL+streamName+"/"+listen);
+    var rtmpURL = "";
+    if(listen=="1") rtmpURL="rtmp://192.168.35.177:1935/stream/"+streamName;
     sock.addEventListener('open',function (event) {
       console.log("연결됨 :",event);
-      streamStatus.textContent="연결됨"
+      
+      streamStatus.textContent="연결됨\n"+rtmpURL;
     });
     sock.onclose = function() {
         console.log("closed");
+        if(recStartButton.innerHTML=="송출중") {
+          recStartButton.onclick();
+        }
         streamStatus.textContent="연결 끊어짐"
     };
   } catch(e){
@@ -117,12 +129,12 @@ function startRecord() {
     mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.start(100);
 
-    startbutton.innerHTML="송출중";
+    recStartButton.innerHTML="송출중";
     const streamName = document.getElementById('sName').value;
     recordRow.appendChild(document.createTextNode("spsi.kro.kr/stream/play/"+streamName));
     recordRow.appendChild(document.createTextNode("전송중 ..."));
 
-    startbutton.onclick = e=> {
+    recStartButton.onclick = e=> {
       console.log("stopping");
       if(mediaRecorder.state == "recording") {
         mediaRecorder.stop();
@@ -133,8 +145,8 @@ function startRecord() {
       
       recordRow.removeChild(recordRow.lastChild);
       recordRow.removeChild(recordRow.lastChild);
-      startbutton.onclick=startRecord;
-      startbutton.innerHTML="송출시작하기";
+      recStartButton.onclick=startRecord;
+      recStartButton.innerHTML="송출시작하기";
     };
 }
 
@@ -198,7 +210,7 @@ function init() {
       });
     }
     navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-    startbutton.onclick=startRecord;
+    recStartButton.onclick=startRecord;
     const audioSource = audioSelect.value;
     const videoSource = videoSelect.value;
     var constraints = {
