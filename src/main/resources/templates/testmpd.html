@@ -9,27 +9,27 @@
   <body>
     <link rel="stylesheet" href="/css/controlbar.css">
     <script src="/js/controlbar.js"></script>
-    <script src="/js/dash.all.min.js"></script>
+
     <script src="/vendor/popper/popper.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="/vendor/dashjs/dash.all.min.js"></script>
     <script th:inline="javascript">
       function init() {
-          var url = 'https://spsi.kro.kr/stream/'+[[${streamName}]]+'/test.mpd';
+          var url = 'https://spsi.kro.kr/stream/vid/'+[[${streamName}]]+'/test.mpd';
           var videoElement = document.querySelector('.videoContainer video');
           var player = dashjs.MediaPlayer().create();
           player.updateSettings({
-              streaming: {
-                    delay: {
-                      liveDelay: 3
-                  },
-                  liveCatchup: {
-                      maxDrift: 0,
-                      playbackRate: 1,
-                     
-                    }
-              }
-          });
+            streaming: {
+                delay: {
+                    liveDelay: 0.5
+                },
+                liveCatchup: {
+                    maxDrift: 0,
+                    playbackRate: 0.5,
+                    latencyThreshold: 60    
+                }
+            }
+        });
           player.initialize(videoElement, url, true);
           var controlbar = new ControlBar(player);
           controlbar.initialize();
