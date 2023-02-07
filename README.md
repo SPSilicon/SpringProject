@@ -6,10 +6,24 @@
 기능--
 
 <h2>로그인, 회원가입</h2>
-
 <h2>글쓰기 삭제 수정 열람</h2>
 
-<h2>컴퓨터 및 영상/녹음 장치 공유</h2>
+<ul>
+Database : Mariadb
+
+spring dataSource driver : mysql
+
+jdbcTemplate사용
+</ul>
+
+
+
+
+
+
+
+
+<h2>기기 영상/녹음 장치 공유</h2>
 
 
 <h1>application.properties 설정</h1>
