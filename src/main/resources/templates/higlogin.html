@@ -84,18 +84,22 @@
     <link href="css/signin.css" rel="stylesheet">
   </head>
   <body class="text-center">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha" async defer></script>
   <script src="vendor/popper/popper.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <main class="form-signin w-100 m-auto">
-  <div th:if="${param.error}">
-    Invalid username and password.</div>
-  <form th:action="@{/login}" method=post>
-    <img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">
+  <div th:if="${param.fail}" class="alert alert-danger" role="alert">
+    비밀번호 또는 아이디가 올바르지 않습니다.</div>
+  <div th:if="${error}" th:text="${error}"class="alert alert-danger" role="alert">
+    Error</div>
+
+  <form th:action="@{/higlogin}" method=post>
+    <img class="mb-4" src="/images/bootstrap-logo.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">로그인</h1>
 
     <div class="form-floating">
-      <input type="username" name="username" class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Email address</label>
+      <input type="username" name="username" class="form-control" id="floatingInput" placeholder="username">
+      <label for="floatingInput">Username</label>
     </div>
     <div class="form-floating">
       <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
@@ -108,7 +112,9 @@
       </label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
+    
   </form>
+  <a class="w-100 btn btn-lg"  href="/oauth2/authorization/kakao"><img src="/images/kakao_login_medium_wide.png" width="100%"/></a>
     <button type="button" class="w-100 btn btn-lg btn-secondary mt-1" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">회원가입</button>   
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -129,10 +135,10 @@
                 <label for="regPassword">비밀번호</label>
               </div>
               <div class="form-floating mb-1 mt-1">
-                <input type="password" class="form-control" id="regPasswordCheck" placeholder="비밀번호 확인">
+                <input type="password" class="form-control" id="regPasswordCheck" name="passwdcheck"placeholder="비밀번호 확인">
                 <label for="regPasswordCheck">비밀번호 확인</label>
               </div>
-          
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAAAB8-uYcG7W_eb07"></div>
               
               <button class="w-100 btn btn-lg btn-primary mb-1 mt-1" type="submit">회원가입</button>
             </form>
