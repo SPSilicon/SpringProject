@@ -23,6 +23,7 @@ public class Member {
 
         return strb.toString();
     }
+    
     public static class Builder {
         private String name;
         private String passwd;
