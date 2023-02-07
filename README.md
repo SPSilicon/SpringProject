@@ -12,7 +12,7 @@
 컴퓨터 및 영상/녹음 장치 공유
 
 
-#application.properties 설정
+<h1>application.properties 설정</h1>
 
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.username= db접속 id
