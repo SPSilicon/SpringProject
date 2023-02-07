@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.4'
+	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
 }
@@ -14,16 +14,26 @@ repositories {
 
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-security"
+	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.data:spring-data-commons'
 	implementation 'com.auth0:java-jwt:4.2.1'
-	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 	//runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 tasks.named('test') {
