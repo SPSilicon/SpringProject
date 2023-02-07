@@ -22,10 +22,6 @@ public class Article {
         return author;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
@@ -37,6 +33,16 @@ public class Article {
     public String getBody() {
         return body;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+
 
     private Article(Long id, String title, String body, String author, Date wdate, Integer views) {
         this.id = id;
