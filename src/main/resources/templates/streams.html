@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+ <title>HelloStream</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <link rel="stylesheet" href="/css/bootstrap.min.css" />
+</head>
+<body>
+<script src="/vendor/popper/popper.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-dark bg-dark" aria-label="First navbar example">
+    <div class="container-fluid ">
+      <div>
+        <a class="navbar-brand" href="#">Streams</a>
+        <a class="btn btn-primary" href="/logout" th:if="${username}">로그아웃</a>
+        <a class="btn btn-primary" href="/higlogin" th:unless="${username}">로그인</a>
+        <a class="btn btn-primary" href="/stream/share">라이브</a>
+        <a class="btn btn-primary" href="/">게시판</a>
+      </div>
+    </div>
+  </nav>
+
+
+    <div class="container">
+        <div class="row row-cols-4">
+            <div th:each="stream : ${streams}" class="col card">
+              <a th:href="@{/stream/play/}+${stream.streamer}" class="card-block stretched-link text-decoration-none">
+                    <img th:src="@{/stream/vid/}+${stream.streamer}+@{/thumbnail.jpg}" class="card-img-top">
+                <h5 class="card-title" th:text="${stream.streamer}">
+                    123124
+                </h5>
+              </a>
+            </div>
+          
+        </div>
+
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#" th:if="${hasPrevious}">Previous</a></li>
+          <li class="page-item" th:each="num : ${#numbers.sequence(start,end)}" >
+            <a class="page-link" th:text="${num}" th:href="@{/streams?pageNum=}+${num}">1</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#" th:if="${hasNext}">Next</a></li>
+        </ul>
+
+    </div>
+
+
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
   <head>
     <title>Hello</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,7 +44,7 @@
         </div>
         <div class="col">
           
-          <input type="text" id="sName" name="sName" placeholder="스트림 이름">
+          <input type="hidden" id="sName" name="sName" placeholder="스트림 이름" th:value="${username}">
           <button class="btn-primary" id="sStart">스트림 연결</button>
           <div class="row" id="streamRow">
             <label id="streamStatus"></label>
