@@ -3,17 +3,38 @@
     <head>
         <meta charset="utf=8" />
         <title>게시글</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
     </head>
     <body>
-        <tbody>
-            <tr th:each="article : ${article}">
-                <td th:text="${article.id}">번호</td>
-                <td th:text="${article.title}">제목</td>
-                <td th:text="${article.author}">작성자</td>
-                <td th:text="${article.body}">내용</td>
-                <td th:text="${article.wdate}">날짜</td>
-                <td th:text="${article.views}">조회수</td>
-            </tr>
-        </tbody>
+    <script src="/vendor/popper/popper.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    
+    <nav class="navbar navbar-dark bg-dark" aria-label="First navbar example">
+      <div class="container-fluid ">
+        <div>
+          <a class="navbar-brand" href="#">HIG</a>
+          <a class="btn btn-primary" href="/logout" th:if="${username}">로그아웃</a>
+          <a class="btn btn-primary" href="/higlogin" th:unless="${username}">로그인</a>
+          <a class="btn btn-primary" href="/stream/share">라이브</a>
+        </div>
+      </div>
+          </nav>
+
+            <div class="container">
+                <div class="row">
+                  <h1 th:text="${article.title}">제목</h1><br>
+                  <h6 th:text="${article.author}">작성자</h6> <h6 th:text="${article.wdate}">날짜</h6> <h6 th:text="${article.views}">조회수</h6>
+                  <div class="col">
+                    <a th:if="${username == article.author}" th:href="@{/post/delete(id=${article.id})}" class="btn btn-primary">삭제</a>
+                    <a th:if="${username == article.author}" th:href="@{/post/update(id=${article.id})}" class="btn btn-primary">수정</a>
+                  </div>
+                  <hr class="border border-danger border-2 opacity-50">
+                </div>
+          
+                <div class="row">
+                  <span style="white-space: pre-line" th:text="${article.body}">내용</span>
+                </div>
+            </div>
     </body>
 </html>

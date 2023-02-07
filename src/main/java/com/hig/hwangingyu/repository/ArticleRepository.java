@@ -11,9 +11,9 @@ import com.hig.hwangingyu.domain.Article;
 public interface ArticleRepository {
     public Long create(Article article);
 
-    public int delete(long id);
+    public boolean delete(long id);
 
-    public void update(Article article);
+    public boolean update(Article article);
 
     public Optional<Article> findbyId(long id);
 

@@ -32,7 +32,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
                     .setAuthor(rs.getString("author"))
                     .setBody(rs.getString("body"))
                     .setTitle(rs.getString("title"))
-                    .setWdate(rs.getDate("wdate"))
+                    .setWdate(rs.getTimestamp("wdate"))
                     .setId(rs.getLong("id"))
                     .build();
             return article;
@@ -54,10 +54,9 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public int delete(long id) {
+    public boolean delete(long id) {
         int rows = jdbcTemplate.update("delete from article where id =?", id);
-        return rows;
-
+        return rows>0;
     }
 
     @Override
@@ -67,10 +66,11 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public void update(Article article) {
-        jdbcTemplate.update("update article set body = ? where id =?", article.getBody(), article.getId());
-        jdbcTemplate.update("update article set title = ? where id =?", article.getBody(), article.getId());
-
+    public boolean update(Article article) {
+        int rows=0;
+        rows += jdbcTemplate.update("update article set body = ? where id =?", article.getBody(), article.getId());
+        rows += jdbcTemplate.update("update article set title = ? where id =?", article.getTitle(), article.getId());
+        return rows>0;
     }
 
     @Override
@@ -81,12 +81,12 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     
     public int getCount() {
-        return jdbcTemplate.queryForObject("select count(*) from article",Integer.class);
+        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject("select count(*) from article",Integer.class));
+        return count.orElse(0);
     }
 
     public Page<Article> findAll(Pageable page) {
-        List<Article> ret = jdbcTemplate.query("select * from article limit "+page.getPageSize() + " offset "+page.getOffset(),articleRowMapper());
-        
+        List<Article> ret = jdbcTemplate.query("select * from article order by id DESC limit "+page.getPageSize() + " offset "+page.getOffset(), articleRowMapper());
         return new PageImpl<Article>(ret, page, getCount());
     }
 

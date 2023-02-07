@@ -22,11 +22,15 @@ public class ArticleService {
     public Optional<Article> read(Long id) {
         return articleRepository.findbyId(id);
     }
-    
-    public void deleleArticle(Long id) {
-        articleRepository.delete(id);
+    public boolean updateArticle(Article article) {
+        return articleRepository.update(article);
     }
-
+    public boolean deleleArticle(Long id) {
+        return articleRepository.delete(id);
+    }
+    public Optional<Article> findById(Long id) {
+        return articleRepository.findbyId(id);
+    }
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
