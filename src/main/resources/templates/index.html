@@ -11,9 +11,18 @@
 <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 
 <nav class="navbar navbar-dark bg-dark" aria-label="First navbar example">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Never expand</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid ">
+      <div>
+        <a class="navbar-brand" href="#">HIG</a>
+        <a class="btn btn-primary" href="/logout" th:if="${username}">로그아웃</a>
+        <a class="btn btn-primary" href="/higlogin" th:unless="${username}">로그인</a>
+        <a class="btn btn-primary" href="/stream/share">라이브</a>
+        <a class="btn btn-primary" href="/streams?pageNum=0">라이브목록</a>
+      </div>
+    </div>
+
+  <!--
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -41,9 +50,7 @@
           <input class="form-control" type="search" placeholder="Search" aria-label="Search">
         </form>
       </div>
-    </div>
-    <a href="/signin">로그인</a>
-    <a href="/live">라이브</a>
+  -->
   </nav>
 
   <div class="d-flex flex-column">
@@ -61,7 +68,7 @@
             <tbody>
                 <tr th:each="article : ${articles}" >
                     <td><a th:text="${article.id}" >View page</a></td>
-                    <td><a th:text="${article.title}" th:href="@{/post(id=${article.id})}" >제목</a></td>
+                    <td><a th:text="${article.title}" th:href="@{post(id=${article.id})}" >제목</a></td>
                     <td th:text="${article.author}">작성자</td>
                     <td th:text="${article.wdate}">날짜</td>
                     <td th:text="${article.views}">조회수</td>
@@ -69,7 +76,6 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-between">
-
             <nav>
               <ul class="pagination">
                 <li class="page-item"><a class="page-link" href="#" th:if="${hasPrevious}">Previous</a></li>
@@ -80,7 +86,7 @@
               </ul>
             </nav>
 
-            <a href="/post/add" class="btn btn-primary">글쓰기</a>           
+            <a href="/post/add" class="btn btn-outline-primary">글쓰기</a>
         </div>
       </div>
 
