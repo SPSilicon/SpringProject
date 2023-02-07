@@ -1,9 +1,10 @@
 package com.hig.hwangingyu.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.hig.hwangingyu.domain.Member;
@@ -12,22 +13,21 @@ import com.hig.hwangingyu.repository.MemberRepository;
 public class MemberService /* implements UserDetailsService */ {
 
     private final MemberRepository memberRepository;
-    static private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
-    public PasswordEncoder passwordEncoder() {
-        return passwordEncoder;
 
-    }
 
     public void register(Member member) {
         validateDup(member);
         UserDetails user = User.builder()
                 .username(member.getName())
-                .password("{bcrypt}" + passwordEncoder().encode(member.getPasswd()))
+                .password(passwordEncoder.encode(member.getPasswd()))
                 .roles("USER")
                 .build();
         memberRepository.register(user);
