@@ -10,10 +10,12 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hig.hwangingyu.domain.Article;
@@ -33,39 +35,31 @@ public class HomeController {
 
     @GetMapping("")
     public String welcome() {
-        return "redirect:/home/0";
-    }
-    @GetMapping("/home")
-    public String first() {
-        
-        return "redirect:/home/0";
+        return "redirect:/home?pageNum=0";
     }
 
-    @GetMapping("home/{pageNum}")
-    public String home(@PathVariable int pageNum, Model model, HttpServletRequest request) {
+    @GetMapping("home")
+    public String home(@RequestParam int pageNum, @RequestParam @Nullable String query, Model model, HttpServletRequest request) {
         
-        String curUsername="";
-        Cookie[] cookies = request.getCookies();
+        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(request.getCookies());
+        Page<Article> page;
 
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            curUsername = jwt.get().getClaim("username").asString();
-            model.addAttribute("username",curUsername);
+        if(query == null) {
+            page = articleService.findAll(PageRequest.of(pageNum, 20));
+        } else {
+            page = articleService.searchArticle(PageRequest.of(pageNum,20), query);
         }
 
-        Pageable pageable = PageRequest.of(pageNum, 20);
-        Page<Article> page = articleService.findAll(pageable);
-        int start = page.getNumber()-page.getNumber()%10;
-        int end = start+10;
-        if(start+10>page.getTotalPages()) {
-            end = page.getTotalPages()-1;
-        }
         
+        int start = page.getNumber() - page.getNumber() % 10;
+        int end = Math.min(start + 10, (int) page.getTotalPages() - 1);
+    
+        jwt.ifPresent(j -> model.addAttribute("username", j.getClaim("username").asString()));
         model.addAttribute("articles", page.getContent());
-        model.addAttribute("curPage", page.getNumber());
-        model.addAttribute("hasNext", start-1>0);
-        model.addAttribute("hasPrevious", start+10<end);
-        model.addAttribute("start",start);
+        model.addAttribute("curPage", pageNum);
+        model.addAttribute("hasNext", start > 0);
+        model.addAttribute("hasPrevious", start + 10 < end);
+        model.addAttribute("start", start);
         model.addAttribute("end", end);
         
         return "index.html";

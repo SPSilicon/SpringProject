@@ -54,16 +54,10 @@ public class ArticleController {
 
         Article post = articleService.findById(id).orElse(null);
         if(post!=null) {
-            String curUsername="";
-            Cookie[] cookies = request.getCookies();
-    
-            Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-            if(jwt.isPresent()) {
-                curUsername = jwt.get().getClaim("username").asString();
-                model.addAttribute("username",curUsername);
-            }
-
-            if(post.getAuthor().equals(curUsername)) {
+            Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(request.getCookies());
+            if(jwt.isPresent() && post.getAuthor().equals(jwt.get().getClaim("username").asString())) {
+                model.addAttribute("username",jwt.get().getClaim("username").asString());
+                
                 return "updatePost.html";
             }
         }
@@ -116,7 +110,9 @@ public class ArticleController {
         
         return "redirect:/home";
     }
-    @GetMapping("home/post")
+
+
+    @GetMapping("post")
     public String read(@RequestParam Long id, Model model, HttpServletRequest request) {
         Article article = articleService.read(id).get();
         System.out.println(article.getBody());

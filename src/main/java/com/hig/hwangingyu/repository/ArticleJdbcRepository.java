@@ -66,6 +66,12 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
+    public Page<Article> search(Pageable page, String query){
+        List<Article> ret = jdbcTemplate.query("select * from article where author LIKE '%"+query+"%' order by id DESC limit "+page.getPageSize() + " offset "+page.getOffset(), articleRowMapper());
+        return new PageImpl<Article>(ret, page, getCount());
+    }
+
+    @Override
     public boolean update(Article article) {
         int rows=0;
         rows += jdbcTemplate.update("update article set body = ? where id =?", article.getBody(), article.getId());

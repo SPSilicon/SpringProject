@@ -17,6 +17,8 @@ public interface ArticleRepository {
 
     public Optional<Article> findbyId(long id);
 
+    public Page<Article> search(Pageable page, String query);
+
     public List<Article> findAll();
 
     public Page<Article> findAll(Pageable Page);

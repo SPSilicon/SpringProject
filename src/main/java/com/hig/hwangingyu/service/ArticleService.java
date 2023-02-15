@@ -37,4 +37,7 @@ public class ArticleService {
     public Page<Article> findAll(Pageable page) {
         return articleRepository.findAll(page);
     }
+    public Page<Article> searchArticle(Pageable page, String query) {
+        return articleRepository.search(page, query);
+    }
 }
