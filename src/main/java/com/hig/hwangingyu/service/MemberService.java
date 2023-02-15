@@ -24,7 +24,12 @@ public class MemberService /* implements UserDetailsService */ {
 
 
     public void register(Member member) {
-        validateDup(member);
+        try{
+            validateDup(member);
+        } catch(IllegalStateException e) {
+            return;
+        }
+        
         UserDetails user = User.builder()
                 .username(member.getName())
                 .password(passwordEncoder.encode(member.getPasswd()))
