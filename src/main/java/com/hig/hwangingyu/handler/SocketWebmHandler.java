@@ -13,6 +13,9 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import com.hig.hwangingyu.service.StreamService;
 import com.hig.hwangingyu.utils.FfmpegProcess;
 
@@ -21,8 +24,9 @@ import com.hig.hwangingyu.utils.FfmpegProcess;
 public class SocketWebmHandler extends BinaryWebSocketHandler {
 
     private static final Map<String, FfmpegProcess> manager = new HashMap<>();
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final StreamService streamService;
+    
 
     public SocketWebmHandler(StreamService streamService) {
         this.streamService = streamService;
@@ -31,20 +35,20 @@ public class SocketWebmHandler extends BinaryWebSocketHandler {
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         
-        System.out.println("error!!" + exception.toString());
+
         String streamName = session.getAttributes().get("streamName").toString();
         FfmpegProcess process = manager.get(streamName);
         if(process!=null&&process.isAlive()) {
             process.destroy();
             manager.remove(streamName);
         }
+        logger.info(streamName+" error\n "+exception.toString());
 
-        System.out.println("closed!");
         super.handleTransportError(session, exception);
     }
     
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
         String streamName = session.getAttributes().get("streamName").toString();
         streamService.deleteStream(streamName);
         FfmpegProcess process = manager.get(streamName);
@@ -53,14 +57,14 @@ public class SocketWebmHandler extends BinaryWebSocketHandler {
             process.destroy();
             manager.remove(streamName);
         }
-        System.out.println("closed!");
+        logger.info(streamName+" closed");
         super.afterConnectionClosed(session, status);
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         String streamName = session.getAttributes().get("streamName").toString();
-        System.out.println("conn!!");
+        logger.info(streamName+" connected");
         streamService.registStream(streamName);
         boolean listen = Integer.parseInt(session.getAttributes().get("listen").toString()) ==1? true : false;
         FfmpegProcess process = new FfmpegProcess(streamName,listen);
@@ -80,6 +84,7 @@ public class SocketWebmHandler extends BinaryWebSocketHandler {
             try {
                 session.close(CloseStatus.SERVER_ERROR);
             } catch(IOException e2) {
+                logger.error("session close Error");
                 //세션 종료에러
             }
             

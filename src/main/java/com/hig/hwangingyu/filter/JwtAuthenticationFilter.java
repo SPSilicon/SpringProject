@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Arrays;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -38,53 +40,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
        
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals("AUTHORIZATION")) {         
- 
+        
+        Optional<Cookie> authorizationCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("AUTHORIZATION")).findFirst();
 
-                        DecodedJWT jwt = jwtProvider.decode(cookie.getValue()).orElse(null);
-                        
-                        if(jwt != null) {
-                            List<GrantedAuthority> auths = new ArrayList<>(); 
-                            for(GrantedAuthority auth : jwt.getClaim("auth").asList(String.class).stream().map(SimpleGrantedAuthority::new).toList()) {
-                                auths.add(auth);
-                            }
-                            
-                            Authentication authentication = 
-                                new UsernamePasswordAuthenticationToken(jwt.getClaim("username").asString(),
-                                                                        "[PROTECTED]",
-                                                                        auths);
-                            
-                            SecurityContext context = SecurityContextHolder.createEmptyContext();                 
-                            context.setAuthentication(authentication);
-                            
-                            //Timestamp t = Timestamp.valueOf(LocalDateTime.now().plusMinutes(2));
-                            //if(jwt.getExpiresAt().before(t)) {
-                                Cookie jwtCookie = new Cookie("AUTHORIZATION",
-                                jwtProvider.encode(authentication.getName(),
-                                authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()));
-
-                                jwtCookie.setPath("/");
-                                jwtCookie.setHttpOnly(true);
-                                jwtCookie.setSecure(true);
-
-                                response.addCookie(jwtCookie);
-                            //}
-    
-                            SecurityContextHolder.setContext(context);
-                        } else {
-                            cookie.setMaxAge(0);
-                            cookie.setPath("/");
-                            cookie.setHttpOnly(true);
-                            cookie.setSecure(true);
-                            response.addCookie(cookie);
-                        }           
-                    break;
-                }
-            }
+        
+        
+        if(!authorizationCookie.isPresent()) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        Optional<DecodedJWT> jwt = jwtProvider.decode(authorizationCookie.get().getValue());
+        if(!jwt.isPresent()) {
+            authorizationCookie.get().setMaxAge(0);
+            authorizationCookie.get().setPath("/");
+            authorizationCookie.get().setHttpOnly(true);
+            authorizationCookie.get().setSecure(true);
+            response.addCookie(authorizationCookie.get());
+            return;
+        }
+
+
+        List<SimpleGrantedAuthority> auths = new ArrayList<>(); 
+        auths =jwt.get().getClaim("auth").asList(String.class).stream().map(SimpleGrantedAuthority::new).toList();
+        
+        Authentication authentication = 
+            new UsernamePasswordAuthenticationToken(jwt.get().getClaim("username").asString(),
+                                                    "[PROTECTED]",
+                                                    auths);
+        
+        SecurityContext context = SecurityContextHolder.createEmptyContext();                 
+        context.setAuthentication(authentication);
+        
+        Cookie jwtCookie = new Cookie("AUTHORIZATION",
+        jwtProvider.encode(authentication.getName(),
+        authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()));
+
+        jwtCookie.setPath("/");
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true);
+
+        response.addCookie(jwtCookie);
+
+        SecurityContextHolder.setContext(context);
 
         filterChain.doFilter(request, response);
     }

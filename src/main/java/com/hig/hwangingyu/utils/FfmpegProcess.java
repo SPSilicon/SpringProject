@@ -7,20 +7,24 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.slf4j.Log4jLogger;
+import org.apache.logging.slf4j.Log4jLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FfmpegProcess {
  // 
     private static final String[] argvs = { 
-        // webm으로 바꿔보기
         "-flags", "+global_header", "-r", "30",
         "-pix_fmt", "yuv420p",
         "-c:v", "h264", "-b:v", "9000K", "-bufsize:v:0", "9000K/2",
         "-g:v", "30", "-keyint_min:v", "30", "-sc_threshold:v", "0",
         "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
-        "-c:a", "aac", "-ar", "44100", "-b:a", "96k", // audio codec config
+        "-c:a", "aac", "-ar", "44100", "-b:a", "96k", 
         "-map", "0:v:0",
         "-map", "0:a:0?",
         "-preset", "ultrafast",
-        //"-tune", "zerolatency",
+        //"-tune", "zerolatency", 지원하면 사용
         "-adaptation_sets", "id=0,seg_duration=1.000,streams=v id=1,seg_duration=1.000,streams=a",
         "-use_timeline", "0",
         "-streaming", "1",
@@ -38,18 +42,27 @@ public class FfmpegProcess {
         "-init_seg_name", "init-stream_$RepresentationID$.$ext$",
         "-f", "dash",
         
-    };
+    }; // mpd
     private static final String[] listenOption = {"-listen", "1", "-i"};
     private static final String[] basicOption = {"-i", "-"};
+    private static final String[] tcmd = {"-vf","fps=1/10", "-y", "-q:v", "1", "-update", "1"}; //썸네일 출력
+    private static final String THUMNAIL_FILE_NAME = "/thumbnail.jpg";
+    private static final String LISTENING_ADDRESS = "rtmp://192.168.35.177:1935/stream/";
+    private static final String LOG_FILE_NAME = "/ffmpeglog.log";
+    private static final String MPD_FILE_NAME = "/test.mpd";
+    
     private final String streamerPath = "/home/hig/jetson-ffmpeg/build/ffmpeg/ffmpeg";
     private final String filePath = getClass().getClassLoader().getResource(".").getFile() + "static/stream/vid/";
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private Process ffmpegProcess;
     private OutputStream ffmpegInput;
     private File log;
     private File streamFolder;
     private String streamName;
 
-    public FfmpegProcess(String streamName,boolean isListening) throws IOException{
+    public FfmpegProcess(String streamName,boolean isListening){
         this.streamName = streamName;
         String [] option;
         if(isListening) {
@@ -61,33 +74,39 @@ public class FfmpegProcess {
 
         streamFolder = new File(filePath+streamName);
         streamFolder.mkdirs();
-        log = new File(streamFolder + "/logggg.log");
+        log = new File(streamFolder + LOG_FILE_NAME);
 
         List<String> commands = new ArrayList<>();
         commands.add(streamerPath);
         for(String i : option) {
             commands.add(i);
         }
-        if(isListening) commands.add("rtmp://192.168.35.177:1935/stream/"+streamName);
+        if(isListening) commands.add( LISTENING_ADDRESS + streamName);
+
         for (String i : argvs) {
             commands.add(i);
         }
-        
-        commands.add(streamFolder + "/test.mpd");
-        String[] tcmd = {"-vf","fps=1/10", "-y", "-q:v", "1", "-update", "1"};
+        commands.add(streamFolder + MPD_FILE_NAME);
+    
         for(String i : tcmd) {
             commands.add(i);
         }
-        commands.add(streamFolder+"/thumbnail.jpg");
+        commands.add(streamFolder+THUMNAIL_FILE_NAME);
+        
+        try{
+            ProcessBuilder ffmpegProcessBuilder = new ProcessBuilder(commands);
+
+            ffmpegProcessBuilder.redirectErrorStream(true);
+        
+            ffmpegProcessBuilder.redirectOutput(Redirect.appendTo(log));
+            
+            ffmpegProcess = ffmpegProcessBuilder.start();
+            ffmpegInput = ffmpegProcess.getOutputStream(); 
+        } catch(IOException e) {
+            logger.error("ffmpegProcessBuild Failed");
+        }
         
 
-        ProcessBuilder ffmpegProcessBuilder = new ProcessBuilder(commands);
-        ffmpegProcessBuilder.redirectErrorStream(true);
-        
-        ffmpegProcessBuilder.redirectOutput(Redirect.appendTo(log));
-        
-        ffmpegProcess = ffmpegProcessBuilder.start();
-        ffmpegInput = ffmpegProcess.getOutputStream(); 
         return;
     }
     public boolean destroy() {

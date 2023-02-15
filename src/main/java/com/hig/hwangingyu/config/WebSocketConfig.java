@@ -1,7 +1,10 @@
 package com.hig.hwangingyu.config;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +24,8 @@ import com.hig.hwangingyu.handler.SocketWebmHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private SocketWebmHandler socketWebmHandler;
 
@@ -32,11 +37,16 @@ public class WebSocketConfig implements WebSocketConfigurer {
                     @Override
                     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                             WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+                        
 
-                        System.out.println("Request ----------" +request.getHeaders());
+                        request.getHeaders().entrySet().forEach((entry)->{
+                            logger.info(entry.getKey()+" : "+entry.getValue().stream().collect(Collectors.joining()));
+                        });
+                        
+                        //System.out.println("Request ----------" +request.getHeaders());
                         
                         String path = request.getURI().getPath();
-                        System.out.println("PATH  " + path);
+                        //System.out.println("PATH  " + path);
                         int st = path.lastIndexOf("share/")+6;
                         int index = path.lastIndexOf("/");
                         String streamName = path.substring(st,index);
