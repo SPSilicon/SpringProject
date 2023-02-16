@@ -33,21 +33,24 @@ public class HomeController {
         this.jwtProvider = jwtProvider;
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public String welcome() {
         return "redirect:/home?pageNum=0";
     }
 
     @GetMapping("home")
-    public String home(@RequestParam int pageNum, @RequestParam @Nullable String query, Model model, HttpServletRequest request) {
+    public String home(@RequestParam @Nullable Integer pageNum, @RequestParam @Nullable String query, Model model, HttpServletRequest request) {
         
         Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(request.getCookies());
         Page<Article> page;
+
+        if(pageNum==null) pageNum =0;
 
         if(query == null) {
             page = articleService.findAll(PageRequest.of(pageNum, 20));
         } else {
             page = articleService.searchArticle(PageRequest.of(pageNum,20), query);
+            model.addAttribute("query", query);
         }
 
         

@@ -35,14 +35,27 @@
             </div>
           
         </div>
+        <div class="row">
+          <div class="col justify-self-start">
+            <form method="GET" action="/streams">
+                <input type="serach" name="query">
+                <input type="hidden" name="pageNum" value="0">
+                <input type="submit" value="검색">
+            </form>
+          </div>
+          <div class="col" align="center">
+            <nav>
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" th:if="${hasPrevious}">Previous</a></li>
+                <li class="page-item" th:each="num : ${#numbers.sequence(start,end)}" >
+                  <a class="page-link" th:text="${num}" th:href="@{streams(pageNum=${num},query=${query})}">1</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#" th:if="${hasNext}">Next</a></li>
+              </ul>
+            </nav>
+          </div>
 
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#" th:if="${hasPrevious}">Previous</a></li>
-          <li class="page-item" th:each="num : ${#numbers.sequence(start,end)}" >
-            <a class="page-link" th:text="${num}" th:href="@{/streams?pageNum=}+${num}">1</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#" th:if="${hasNext}">Next</a></li>
-        </ul>
+        </div>
 
     </div>
 

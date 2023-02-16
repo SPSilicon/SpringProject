@@ -25,6 +25,12 @@ public class StreamJdbcRepository implements StreamRepository{
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+
+    @Override
+    public Page<Stream> searchByStreamer(Pageable page, String streamer) {
+        List<Stream> ret = jdbcTemplate.query("select * from streams where streamer LIKE '%"+streamer+"%' limit ? offset ?", streamRowMapper(),page.getPageSize(),page.getOffset());
+        return new PageImpl<Stream>(ret,page,getCount());
+    }
     @Override
     public Page<Stream> findAll(Pageable page) {
 

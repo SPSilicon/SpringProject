@@ -34,4 +34,8 @@ public class StreamService {
     public boolean deleteStream(String streamer) {
         return streamRepository.delete(streamer);
     }
+
+    public Page<Stream> searchByStreamer(Pageable page,String streamer) {
+        return streamRepository.searchByStreamer(page, streamer);
+    }
 }

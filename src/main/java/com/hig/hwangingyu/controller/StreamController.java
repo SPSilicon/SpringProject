@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,18 +53,24 @@ public class StreamController {
     }
 
     @GetMapping("/streams") 
-    public String streams(@RequestParam int pageNum, Model model ,HttpServletRequest request) {
+    public String streams(@RequestParam @Nullable Integer pageNum, @RequestParam @Nullable String query, Model model ,HttpServletRequest request) {
 
         String curUsername="";
         Cookie[] cookies = request.getCookies();
-
+        if(pageNum==null) pageNum=0;
+        
         Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
         if(jwt.isPresent()) {
             curUsername = jwt.get().getClaim("username").asString();
             model.addAttribute("username",curUsername);
         }
-
-        Page<Stream> page = streamService.findAll(PageRequest.of(pageNum,16));
+        Page<Stream> page;
+        if(query == null) {
+            page = streamService.findAll(PageRequest.of(pageNum,16));
+        } else {
+            page = streamService.searchByStreamer(PageRequest.of(pageNum,16), query);
+        }
+         
         model.addAttribute("streams", page.getContent());
 
         int start = page.getNumber()-page.getNumber()%10;
@@ -71,7 +78,9 @@ public class StreamController {
         if(start+10>page.getTotalPages()) {
             end = page.getTotalPages()-1;
         }
-        
+
+        model.addAttribute("query", query);
+        model.addAttribute("pageNum", pageNum);
         model.addAttribute("articles", page.getContent());
         model.addAttribute("curPage", page.getNumber());
         model.addAttribute("hasNext", start-1>0);

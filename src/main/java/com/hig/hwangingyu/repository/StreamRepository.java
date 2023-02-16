@@ -13,4 +13,5 @@ public interface StreamRepository {
     public Page<Stream> findAll(Pageable Page);
     public Boolean delete(String streamer);
     public void registStream(String streamer);
+    public Page<Stream> searchByStreamer(Pageable Page, String streamer);
 }
