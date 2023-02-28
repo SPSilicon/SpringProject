@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .authorizeRequests((authorizeRequests) -> authorizeRequests
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                     .permitAll()
-                    .antMatchers( "/","/stream/vid/**","/vendor/**","/stream/play/*","/member/register","/home/**","/koauth","/streams")
+                    .antMatchers( "/","/stream/vid/**","/vendor/**","/stream/play/*","/member/register","/home/**","/koauth","/streams","/post")
                     .permitAll()
                     .antMatchers("/**")
                     .hasRole("USER"))
