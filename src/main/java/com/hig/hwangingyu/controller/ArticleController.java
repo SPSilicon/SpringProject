@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,24 +21,17 @@ import com.hig.hwangingyu.utils.JWTProvider;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
-    private final JWTProvider jwtProvider;
 
    
-    public ArticleController(ArticleService articleService, JWTProvider jwtProvider) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.jwtProvider  = jwtProvider;
     }
 
     @PostMapping("post/add")
-    public String add(Article articleForm, HttpServletRequest request) {
+    public String add(Article articleForm,@AuthenticationPrincipal String curUsername, HttpServletRequest request) {
         System.out.println(articleForm.getBody());
 
-        Cookie[] cookies = request.getCookies();
-
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            articleForm.setAuthor(jwt.get().getClaim("username").asString());
-        }
+        articleForm.setAuthor(curUsername);
 
         System.out.println(articleForm.getAuthor());
         articleService.uploadArticle(articleForm);
@@ -50,62 +44,39 @@ public class ArticleController {
     }
 
     @GetMapping("post/update")
-    public String update(@RequestParam Long id, Model model, HttpServletRequest request) {
+    public String update(@RequestParam Long id,@AuthenticationPrincipal String curUsername, Model model, HttpServletRequest request) {
 
         Article post = articleService.findById(id).orElse(null);
-        if(post!=null) {
-            Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(request.getCookies());
-            if(jwt.isPresent() && post.getAuthor().equals(jwt.get().getClaim("username").asString())) {
-                model.addAttribute("username",jwt.get().getClaim("username").asString());
-                
-                return "updatePost.html";
-            }
+
+        if(post!=null &&post.getAuthor().equals(curUsername)) {
+            model.addAttribute("username",curUsername);
+            return "updatePost.html";
+        } else {
+            throw new IllegalStateException(curUsername+"안됨!");
         }
-
-
-        return "redirect:/home";
     }
 
     @PostMapping("post/update")
-    public String update(Article articleForm, Model model, HttpServletRequest request) {
+    public String update(Article articleForm,@AuthenticationPrincipal String curUsername, Model model, HttpServletRequest request) {
 
-
-        if(articleForm!=null) {
-            String curUsername="";
-            Cookie[] cookies = request.getCookies();
-    
-            Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-            if(jwt.isPresent()) {
-                curUsername = jwt.get().getClaim("username").asString();
-                model.addAttribute("username",curUsername);
-            }
-
-            if(articleForm.getAuthor().equals(curUsername)) {
-                articleService.updateArticle(articleForm);
-
-                return "redirect:/home/post?id="+articleForm.getId();
-            }
+        if(articleForm.getAuthor().equals(curUsername)) {
+            articleService.updateArticle(articleForm);
+            return "redirect:/home/post?id="+articleForm.getId();
+        } else {
+            throw new IllegalStateException(curUsername+"안됨!");
         }
 
-        return "redirect:/home";
     }
+    
     @GetMapping("post/delete")
-    public String delete(@RequestParam Long id, Model model, HttpServletRequest request) {
-
-        String curUsername="";
-        Cookie[] cookies = request.getCookies();
-
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            curUsername = jwt.get().getClaim("username").asString();
-            model.addAttribute("username",curUsername);
-        }
+    public String delete(@RequestParam Long id, @AuthenticationPrincipal String curUsername, Model model, HttpServletRequest request) {
+        model.addAttribute("username",curUsername);
 
         Article article = articleService.read(id).orElse(null);
-        if(article!=null) {
-            if(article.getAuthor().equals(curUsername)) {
-                articleService.deleleArticle(id);
-            }
+        if(article!=null && article.getAuthor().equals(curUsername)) {
+            articleService.deleleArticle(id);
+        } else {
+            throw new IllegalStateException(curUsername+"안됨!");
         }
         
         return "redirect:/home";
@@ -113,15 +84,10 @@ public class ArticleController {
 
 
     @GetMapping("post")
-    public String read(@RequestParam Long id, Model model, HttpServletRequest request) {
+    public String read(@RequestParam Long id, @AuthenticationPrincipal String curUsername, Model model, HttpServletRequest request) {
         Article article = articleService.read(id).get();
         System.out.println(article.getBody());
-        
-        Cookie[] cookies = request.getCookies();
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            model.addAttribute("username",jwt.get().getClaim("username").asString());
-        }
+        model.addAttribute("username",curUsername);
 
         model.addAttribute("article", articleService.read(id).get());
 

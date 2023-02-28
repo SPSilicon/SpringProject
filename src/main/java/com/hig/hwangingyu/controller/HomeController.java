@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,22 +27,23 @@ import com.hig.hwangingyu.utils.JWTProvider;
 @Controller
 public class HomeController {
     private final ArticleService articleService;
-    private final JWTProvider jwtProvider;
     
-    public HomeController(ArticleService articleService, JWTProvider jwtProvider) {
+    public HomeController(ArticleService articleService) {
         this.articleService = articleService;
-        this.jwtProvider = jwtProvider;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String welcome() {
         return "redirect:/home?pageNum=0";
     }
 
     @GetMapping("home")
-    public String home(@RequestParam @Nullable Integer pageNum, @RequestParam @Nullable String query, Model model, HttpServletRequest request) {
+    public String home(@RequestParam @Nullable Integer pageNum,
+    @AuthenticationPrincipal String curUsername,
+    @RequestParam @Nullable String query, 
+    Model model, 
+    HttpServletRequest request) {
         
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(request.getCookies());
         Page<Article> page;
 
         if(pageNum==null) pageNum =0;
@@ -56,8 +58,8 @@ public class HomeController {
         
         int start = page.getNumber() - page.getNumber() % 10;
         int end = Math.min(start + 10, (int) page.getTotalPages() - 1);
-    
-        jwt.ifPresent(j -> model.addAttribute("username", j.getClaim("username").asString()));
+        
+        model.addAttribute("username",curUsername);
         model.addAttribute("articles", page.getContent());
         model.addAttribute("curPage", pageNum);
         model.addAttribute("hasNext", start > 0);

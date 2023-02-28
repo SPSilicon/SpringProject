@@ -10,25 +10,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.hig.hwangingyu.domain.Stream;
 import com.hig.hwangingyu.service.StreamService;
-import com.hig.hwangingyu.utils.JWTProvider;
+
 
 @Controller
 public class StreamController {
     
     private final StreamService streamService;
-    private final JWTProvider jwtProvider;
-    public StreamController(StreamService streamService, JWTProvider jwtProvider) {
+
+    public StreamController(StreamService streamService) {
         this.streamService = streamService;
-        this.jwtProvider = jwtProvider;
     }
 
     @GetMapping("/stream/play/{streamName}")
@@ -38,32 +38,20 @@ public class StreamController {
     }
 
     @GetMapping("/stream/share")
-    public String share(Model model, HttpServletRequest request) {
+    public String share(Model model,@AuthenticationPrincipal String curUsername, HttpServletRequest request) {
 
-        String curUsername="";
-        Cookie[] cookies = request.getCookies();
-
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            curUsername = jwt.get().getClaim("username").asString();
-            model.addAttribute("username",curUsername);
-        }
-        
+        model.addAttribute("username",curUsername);
+    
         return "media.html";
     }
 
     @GetMapping("/streams") 
-    public String streams(@RequestParam @Nullable Integer pageNum, @RequestParam @Nullable String query, Model model ,HttpServletRequest request) {
+    public String streams(@RequestParam @Nullable Integer pageNum, @RequestParam @Nullable String query,@AuthenticationPrincipal String curUsername, Model model ,HttpServletRequest request) {
 
-        String curUsername="";
-        Cookie[] cookies = request.getCookies();
         if(pageNum==null) pageNum=0;
-        
-        Optional<DecodedJWT> jwt = jwtProvider.getJWTfromCookies(cookies);
-        if(jwt.isPresent()) {
-            curUsername = jwt.get().getClaim("username").asString();
-            model.addAttribute("username",curUsername);
-        }
+
+        model.addAttribute("username",curUsername);
+
         Page<Stream> page;
         if(query == null) {
             page = streamService.findAll(PageRequest.of(pageNum,16));
