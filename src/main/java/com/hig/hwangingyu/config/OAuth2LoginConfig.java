@@ -33,8 +33,8 @@ public class OAuth2LoginConfig {
 
     private ClientRegistration kakaoClientRegistration() {
     return ClientRegistration.withRegistrationId("kakao")
-        .clientId(kakaoClientId)//"12a6f1f63767372dc771760ff2e447fb")
-        .clientSecret(kakaoClientSecret)//"i1TIFGvRn4W3K22DPUYJWVGXeaHY5Bmo")
+        .clientId(kakaoClientId)
+        .clientSecret(kakaoClientSecret)
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .redirectUri("{baseUrl}/login/oauth2/code/")
