@@ -14,8 +14,8 @@
     <div class="container-fluid ">
       <div>
         <a class="navbar-brand" href="#">Streams</a>
-        <a class="btn btn-primary" href="/logout" th:if="${username}">로그아웃</a>
-        <a class="btn btn-primary" href="/higlogin" th:unless="${username}">로그인</a>
+        <a class="btn btn-primary" href="/logout" th:if="${username}!=anonymousUser">로그아웃</a>
+        <a class="btn btn-primary" href="/higlogin" th:unless="${username}!=anonymousUser">로그인</a>
         <a class="btn btn-primary" href="/stream/share">라이브</a>
         <a class="btn btn-primary" href="/">게시판</a>
       </div>
