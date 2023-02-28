@@ -40,18 +40,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
        
-        
-        Optional<Cookie> authorizationCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("AUTHORIZATION")).findFirst();
+        Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
+        if(cookies.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        
-        
+        Optional<Cookie> authorizationCookie = Arrays.stream(cookies.get()).filter(cookie -> cookie.getName().equals("AUTHORIZATION")).findFirst();
         if(!authorizationCookie.isPresent()) {
             filterChain.doFilter(request, response);
             return;
         }
 
         Optional<DecodedJWT> jwt = jwtProvider.decode(authorizationCookie.get().getValue());
-        if(!jwt.isPresent()) {
+        if(jwt.isEmpty()) {
             authorizationCookie.get().setMaxAge(0);
             authorizationCookie.get().setPath("/");
             authorizationCookie.get().setHttpOnly(true);
