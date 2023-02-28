@@ -22,7 +22,7 @@
 
     <Loggers>
     
-        <Root level="trace">
+        <Root level="INFO">
             <AppenderRef ref="console"/>
         </Root>
 
