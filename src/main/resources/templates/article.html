@@ -19,22 +19,28 @@
           <a class="btn btn-primary" href="/stream/share">라이브</a>
         </div>
       </div>
-          </nav>
-
-            <div class="container">
-                <div class="row">
-                  <h1 th:text="${article.title}">제목</h1><br>
-                  <h6 th:text="${article.author}">작성자</h6> <h6 th:text="${article.wdate}">날짜</h6> <h6 th:text="${article.views}">조회수</h6>
-                  <div class="col">
-                    <a th:if="${username == article.author}" th:href="@{/post/delete(id=${article.id})}" class="btn btn-primary">삭제</a>
-                    <a th:if="${username == article.author}" th:href="@{/post/update(id=${article.id})}" class="btn btn-primary">수정</a>
-                  </div>
-                  <hr class="border border-danger border-2 opacity-50">
-                </div>
-          
-                <div class="row">
-                  <span style="white-space: pre-line" th:text="${article.body}">내용</span>
-                </div>
-            </div>
+    </nav>
+    <div class="toast show text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" th:if="${error}">
+      <div class="d-flex">
+        <div class="toast-body" role="alert" th:text="${error}">
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button> 
+      </div>
+    </div>
+    <div class="container">
+        <div class="row">
+          <h1 th:text="${article.title}">제목</h1><br>
+          <h6 th:text="${article.author}">작성자</h6> <h6 th:text="${article.wdate}">날짜</h6> <h6 th:text="${article.views}">조회수</h6>
+          <div class="col">
+            <a th:if="${username == article.author}" th:href="@{/post/delete(id=${article.id})}" class="btn btn-primary">삭제</a>
+            <a th:if="${username == article.author}" th:href="@{/post/update(id=${article.id})}" class="btn btn-primary">수정</a>
+          </div>
+          <hr class="border border-danger border-2 opacity-50">
+        </div>
+  
+        <div class="row">
+          <span style="white-space: pre-line" th:text="${article.body}">내용</span>
+        </div>
+    </div>
     </body>
 </html>

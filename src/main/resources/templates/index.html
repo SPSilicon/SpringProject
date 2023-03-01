@@ -20,7 +20,6 @@
         <a class="btn btn-primary" href="/streams?pageNum=0">라이브목록</a>
       </div>
     </div>
-
   <!--
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -51,9 +50,18 @@
         </form>
       </div>
   -->
-  </nav>
+</nav>
 
-  <div class="d-flex flex-column">
+
+  <div class="d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="toast show text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" th:if="${error}">
+        <div class="d-flex">
+          <div class="toast-body" role="alert" th:text="${error}">
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button> 
+        </div>
+    </div>
+    
       <div class="container">
         <table class="table">
             <thead>
