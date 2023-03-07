@@ -90,7 +90,7 @@ public class MemberController {
 
     }
     
-    @GetMapping("higlogin")
+    @GetMapping("login")
     public String login(@Nullable @RequestParam(value="passwordCheck") String error, Model model) {
         //model.addAttribute("error",error);
         return "higlogin.html";
