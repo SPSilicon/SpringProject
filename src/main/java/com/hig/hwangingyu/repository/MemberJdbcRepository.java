@@ -33,24 +33,11 @@ public class MemberJdbcRepository implements MemberRepository {
         };
     }
 
-    //private RowMapper<String> authRowMapper() {
-    //    return (rs, rowNum) -> {
-    //        String ret = rs.getString("name");
-    //        return ret;
-     //   };
-    //}
-
     @Override
     public void register(UserDetails member) {
         jdbcUserDetailsManager.createUser(member);
     }
 
-   // @Override
-    //public List<String> getAuthoritiesByName(String name) {
-    //    List<String> ret = jdbcTemplate.query("select authority from authorities where username=?", authRowMapper(),
-   //             name);
-   //     return ret;
-   // }
 
     @Override
     public List<Member> findAll() {
