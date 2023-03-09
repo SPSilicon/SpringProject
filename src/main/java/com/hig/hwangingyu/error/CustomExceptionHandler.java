@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @ControllerAdvice
+
 public class CustomExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 

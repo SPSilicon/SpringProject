@@ -6,9 +6,9 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-
-
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +27,7 @@ import com.hig.hwangingyu.handler.LoginSuccessHandler;
 
 import com.hig.hwangingyu.service.CustomOAuth2UserService;
 
-//@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -47,14 +47,14 @@ public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        
+
             http
-                .authorizeRequests((authorizeRequests) -> authorizeRequests
+                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                     .permitAll()
-                    .antMatchers( "/","/stream/vid/**","/vendor/**","/stream/play/*","/member/register","/home/**","/koauth","/streams","/post")
+                    .requestMatchers( "/higlogin","/","/stream/vid/**","/vendor/**","/stream/play/*","/member/register","/home/**","/koauth","/streams","/post")
                     .permitAll()
-                    .antMatchers("/**")
+                    .anyRequest()
                     .hasRole("USER"))
    
                 .formLogin((formLogin) -> formLogin
@@ -70,7 +70,6 @@ public class SecurityConfig {
                     .userInfoEndpoint()
                     .userService(customOAuth2UserService)
                     .and()
-
                 .and()
                 
                 .addFilterBefore(jwtAuthenticationFilter,

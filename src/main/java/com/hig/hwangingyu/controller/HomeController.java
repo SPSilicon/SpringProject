@@ -2,8 +2,8 @@ package com.hig.hwangingyu.controller;
 
 
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
@@ -32,9 +32,9 @@ public class HomeController {
         this.articleService = articleService;
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public String welcome() {
-        return "redirect:/home?pageNum=0";
+        return "redirect:home";
     }
 
     @GetMapping("home")
@@ -54,7 +54,6 @@ public class HomeController {
             page = articleService.searchArticle(PageRequest.of(pageNum,20), query);
             model.addAttribute("query", query);
         }
-
         
         int start = page.getNumber() - page.getNumber() % 10;
         int end = Math.min(start + 10, (int) page.getTotalPages() - 1);
@@ -67,7 +66,7 @@ public class HomeController {
         model.addAttribute("start", start);
         model.addAttribute("end", end);
         
-        return "index.html";
+        return "home.html";
     }
 
     @GetMapping("live")
