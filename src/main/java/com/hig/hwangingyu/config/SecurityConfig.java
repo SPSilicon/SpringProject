@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import javax.sql.DataSource;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -48,43 +50,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-            http
+        http
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                    .permitAll()
-                    .requestMatchers( "/higlogin","/","/stream/vid/**","/vendor/**","/stream/play/*","/member/register","/home/**","/koauth","/streams","/post")
-                    .permitAll()
-                    .anyRequest()
-                    .hasRole("USER"))
-   
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll()
+                        .requestMatchers("/higlogin", "/", "/stream/vid/**", "/vendor/**", "/stream/play/*", "/member/register", "/home/**", "/koauth", "/streams", "/post")
+                        .permitAll()
+                        .anyRequest()
+                        .hasAnyRole("USER"))
+
                 .formLogin((formLogin) -> formLogin
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .loginPage("/higlogin")
-                    .successHandler(loginSuccessHandler)
-                    .failureUrl("/higlogin?fail")
-                    .permitAll())
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .loginPage("/higlogin")
+                        .successHandler(loginSuccessHandler)
+                        .failureUrl("/higlogin?fail")
+                        .permitAll())
 
-                .oauth2Login()
-                    .successHandler(loginSuccessHandler)
-                    .userInfoEndpoint()
-                    .userService(customOAuth2UserService)
-                    .and()
-                .and()
-                
+                .oauth2Login(login -> login
+                        .successHandler(loginSuccessHandler)
+                        .userInfoEndpoint()
+                        .userService(customOAuth2UserService))
+
                 .addFilterBefore(jwtAuthenticationFilter,
-                    BasicAuthenticationFilter.class)
+                        BasicAuthenticationFilter.class)
 
-                .logout()
-                    .logoutUrl("/logout")
-                    .invalidateHttpSession(false).deleteCookies("AUTHORIZATION")
-                    .logoutSuccessUrl("/home")
-
-                .and()
-                    .cors().configurationSource(corsConfigurationSource())
-
-                .and()
-                    .csrf().disable();
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(false).deleteCookies("AUTHORIZATION")
+                        .logoutSuccessUrl("/home"))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf((csrf) -> csrf.disable());
 
 
 
