@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hig.hwangingyu.domain.Stream;
 import com.hig.hwangingyu.repository.StreamRepository;
@@ -25,12 +26,14 @@ public class StreamService {
         return streamRepository.findbyStreamer(id);
     }
 
+    @Transactional
     public void registStream(String streamer) {
         deleteStream(streamer);
         streamRepository.registStream(streamer);
         return;
     }
 
+    @Transactional
     public boolean deleteStream(String streamer) {
         return streamRepository.delete(streamer);
     }

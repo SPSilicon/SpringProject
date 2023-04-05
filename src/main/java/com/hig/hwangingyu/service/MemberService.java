@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hig.hwangingyu.domain.Member;
 import com.hig.hwangingyu.repository.MemberRepository;
@@ -22,7 +23,7 @@ public class MemberService /* implements UserDetailsService */ {
     }
 
 
-
+    @Transactional
     public void register(Member member) {
         try{
             validateDup(member);
@@ -37,7 +38,7 @@ public class MemberService /* implements UserDetailsService */ {
                 .build();
         memberRepository.register(user);
     }
-
+    
     public void validateDup(Member member) {
         memberRepository.findByName(member.getName())
                 .ifPresent(i -> {
