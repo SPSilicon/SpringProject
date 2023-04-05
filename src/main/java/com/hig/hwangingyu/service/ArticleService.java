@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hig.hwangingyu.domain.Article;
 import com.hig.hwangingyu.repository.ArticleRepository;
@@ -14,20 +15,27 @@ public class ArticleService {
 
     public ArticleService(ArticleRepository articleRepository) {this.articleRepository = articleRepository;}
 
+    @Transactional
     public Long uploadArticle(Article article) {
         Long ret =articleRepository.create(article);
         return ret;
     }
 
-    public Optional<Article> read(Long id) {
-        return articleRepository.findbyId(id);
-    }
+    @Transactional
     public boolean updateArticle(Article article) {
         return articleRepository.update(article);
     }
+    
+    @Transactional
     public boolean deleleArticle(Long id) {
         return articleRepository.delete(id);
     }
+
+    public Optional<Article> read(Long id) {
+        return articleRepository.findbyId(id);
+    }
+
+
     public Optional<Article> findById(Long id) {
         return articleRepository.findbyId(id);
     }
