@@ -1,17 +1,40 @@
 # SpringProject
 
-<h2>로그인, 회원가입</h2>
-<h2>글쓰기 삭제 수정 열람</h2>
+![스크린샷(320)](https://user-images.githubusercontent.com/44769598/231676714-2fbfea3f-985f-4ce2-9461-79f51a6484d5.png) 
 
+
+# 사용 기술 
 <ul>
-<li>Database : Mariadb</li>
-
-<li>spring dataSource driver : mysql</li>
-
-<li>jdbcTemplate사용</li>
+<li> Mariadb</li>
+<li> Spring Boot 3</li>
+<li> Spring Security</li>
+<li> JWT </li>
+<li> ffmpeg 4.3 이상</li>
+<li> javascript </li>
+<li> sock.js </li>
+<li> webRTC</li>
+<li> bootstrap </li>
 </ul>
 
+<h2>로그인, 회원가입</h2>  
 
+![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
+### OAuth2 카카오 로그인 구현
+##### 로그인 성공시 JWT 토큰 생성후 Cookie에 저장 이후 로그인 인증 필요시 쿠키 확인.
+### Remember me 미구현  
+<h2>글쓰기 삭제 수정 열람</h2>  
+
+
+### 글쓰기
+![스크린샷(323)](https://user-images.githubusercontent.com/44769598/231677798-78fd1747-1fdc-4ca9-8938-0da6b8ff45c8.png)
+### 글쓰기 이후
+![스크린샷(322)](https://user-images.githubusercontent.com/44769598/231677539-45ce9709-e60b-45ab-81fc-42e3067903af.png)
+### 글
+![스크린샷(324)](https://user-images.githubusercontent.com/44769598/231678101-ec1e668d-d57d-40ad-a2db-dc7ed0e1d843.png)
+### 수정
+![스크린샷(325)](https://user-images.githubusercontent.com/44769598/231678114-c0b9aab8-7d2a-4eb7-a2f9-3f2c93bc423d.png)
+### 수정 후
+![스크린샷(326)](https://user-images.githubusercontent.com/44769598/231678780-69a90223-5b66-47af-b7c5-40f319046d42.png)
 
 <h2>기기 영상/소리 녹음 장치 공유</h2>
 
@@ -26,15 +49,19 @@
 [ffmpeg commandline builder](https://github.com/peterchave/ffbuilder) <br>
 [ffmpeg documentation](https://ffmpeg.org/ffmpeg.html)
 
+
 <h3>sock.js</h3>
 
+![스크린샷(327)](https://user-images.githubusercontent.com/44769598/231680811-12d848e0-ea3a-47fd-b9f8-089b87f15a6e.png)
+
+![스크린샷(328)](https://user-images.githubusercontent.com/44769598/231680989-66259f4b-bd65-432c-af44-83ab72f890c7.png)
 
 [sock.js github](https://github.com/sockjs/sockjs-client)
 
 
 녹음 하기전, 브라우저와 spring서버를 websocket으로 연결
 
-연결 성공시, ffmpeg 서브프로세스를 생성하고 로그인한 아이디를 key로 한 HashMap에 핸들 저장
+연결 성공시, ffmpeg 서브프로세스를 생성하고 로그인한 아이디를 key로 한 HashMap에 프로세스의 참조를 저장
  
 webRTC를 사용하여 영상/소리 녹음
 
