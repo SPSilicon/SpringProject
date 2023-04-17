@@ -22,6 +22,9 @@
 ### OAuth2 카카오 로그인 구현
 ##### 로그인 성공시 JWT 토큰 생성후 Cookie에 저장 이후 로그인 인증 필요시 쿠키 확인.
 ### Remember me 미구현  
+![캡처](https://user-images.githubusercontent.com/44769598/232427086-6f39e6a2-06c3-416e-8111-5888b6389c6b.PNG)  
+회원가입 시 cloudflare에서 제공하는 봇체크 사용  
+
 <h2>글쓰기 삭제 수정 열람</h2>  
 
 
