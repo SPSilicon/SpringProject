@@ -50,6 +50,7 @@ public class ArticleController {
 
         if(post!=null &&post.getAuthor().equals(curUsername)) {
             model.addAttribute("username",curUsername);
+            model.addAttribute("article", post);
             return "updatePost.html";
         } else {
             throw new IllegalStateException(curUsername+"안됨!");
@@ -61,7 +62,7 @@ public class ArticleController {
 
         if(articleForm.getAuthor().equals(curUsername)) {
             articleService.updateArticle(articleForm);
-            return "redirect:/home/post?id="+articleForm.getId();
+            return "redirect:/post?id="+articleForm.getId();
         } else {
             throw new IllegalStateException(curUsername+"안됨!");
         }
