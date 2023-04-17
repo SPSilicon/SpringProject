@@ -1,4 +1,4 @@
-package com.hig.hwangingyu.error;
+package com.hig.hwangingyu.controller.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
         
         log.info(ex.getMessage());
         redirectAttribute.addFlashAttribute("error", ex.getMessage());
-        String target = request.getHeader("referer") == null? "home" : request.getHeader("Referer");
+        String target = request.getHeader("referer") == null? "home" : request.getHeader("referer").substring(20);
         return "redirect:/"+target;
     }
 }
