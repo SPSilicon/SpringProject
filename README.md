@@ -53,13 +53,21 @@
 [ffmpeg documentation](https://ffmpeg.org/ffmpeg.html)
 
 
-<h3>sock.js</h3>
+<h3>sock.js</h3>  
+[sock.js github](https://github.com/sockjs/sockjs-client)  
 
-![스크린샷(327)](https://user-images.githubusercontent.com/44769598/231680811-12d848e0-ea3a-47fd-b9f8-089b87f15a6e.png)
-
+### 영상 캡쳐 페이지  
+![스크린샷(327)](https://user-images.githubusercontent.com/44769598/231680811-12d848e0-ea3a-47fd-b9f8-089b87f15a6e.png)  
 ![스크린샷(328)](https://user-images.githubusercontent.com/44769598/231680989-66259f4b-bd65-432c-af44-83ab72f890c7.png)
 
-[sock.js github](https://github.com/sockjs/sockjs-client)
+### 스트림 목록 페이지
+![캡처](https://user-images.githubusercontent.com/44769598/232487625-3a334daf-f68c-4104-a25e-180f50b119b9.PNG)
+
+### 영상 시청
+![캡처2](https://user-images.githubusercontent.com/44769598/232526253-8bd6e4c9-0c18-4296-8152-e66f0ce523d8.PNG)
+
+
+
 
 
 녹음 하기전, 브라우저와 spring서버를 websocket으로 연결
