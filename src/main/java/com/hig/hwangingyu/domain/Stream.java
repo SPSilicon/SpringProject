@@ -5,7 +5,7 @@ public class Stream {
     String streamer;
 
 
-    private Stream(String streamName, String streamer) {
+    public Stream(String streamName, String streamer) {
         this.streamName = streamName;
         this.streamer = streamer;
     }

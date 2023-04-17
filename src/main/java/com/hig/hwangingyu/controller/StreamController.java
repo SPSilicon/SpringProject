@@ -34,7 +34,7 @@ public class StreamController {
     @GetMapping("/stream/play/{streamName}")
     public String stream(@PathVariable("streamName") String streamName ,Model model) {
         model.addAttribute("streamName", streamName);
-        return "testmpd.html";
+        return "play.html";
     }
 
     @GetMapping("/stream/share")
