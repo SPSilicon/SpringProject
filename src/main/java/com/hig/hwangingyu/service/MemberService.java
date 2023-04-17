@@ -1,5 +1,7 @@
 package com.hig.hwangingyu.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,20 +17,22 @@ public class MemberService /* implements UserDetailsService */ {
 
     private final MemberRepository memberRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Transactional
     public void register(Member member) {
+
         try{
             validateDup(member);
         } catch(IllegalStateException e) {
-            return;
+            throw e;
         }
         
         UserDetails user = User.builder()
@@ -39,10 +43,21 @@ public class MemberService /* implements UserDetailsService */ {
         memberRepository.register(user);
     }
     
+    @Transactional
+    public Optional<Member> findMember(String username) {
+        return memberRepository.findByName(username);
+    }
+
+    @Transactional
+    public void withDrawl(String username) {
+        memberRepository.withDrawl(username);
+    }
+
+
     public void validateDup(Member member) {
         memberRepository.findByName(member.getName())
                 .ifPresent(i -> {
-                    throw new IllegalStateException("dup!");
+                    throw new IllegalStateException("이미 존재하는 아이디입니다.");
                 });
     }
 

@@ -9,6 +9,8 @@ import com.hig.hwangingyu.domain.Member;
 public interface MemberRepository {
     void register(UserDetails member);
 
+    void withDrawl(String memberName);
+    
     Optional<Member> findByName(String name);
 
     //List<String> getAuthoritiesByName(String name);

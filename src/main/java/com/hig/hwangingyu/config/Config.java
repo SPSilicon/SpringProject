@@ -43,7 +43,7 @@ public class Config {
     public ArticleService articleService() { return new ArticleService(articleRepository());}
 
     @Bean
-    public MemberService memberService() { return new MemberService(memberRepository());}
+    public MemberService memberService() { return new MemberService(memberRepository(),passwordEncoder());}
 
     @Bean
     public CustomOAuth2UserService customOAuth2UserService() { return new CustomOAuth2UserService(memberRepository(), passwordEncoder());}
