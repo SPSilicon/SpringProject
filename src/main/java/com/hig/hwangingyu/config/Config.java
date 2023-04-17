@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.hig.hwangingyu.controller.handler.LoginSuccessHandler;
+import com.hig.hwangingyu.controller.handler.SocketWebmHandler;
 import com.hig.hwangingyu.filter.JwtAuthenticationFilter;
-import com.hig.hwangingyu.handler.LoginSuccessHandler;
-import com.hig.hwangingyu.handler.SocketWebmHandler;
 import com.hig.hwangingyu.repository.ArticleJdbcRepository;
 import com.hig.hwangingyu.repository.ArticleRepository;
 import com.hig.hwangingyu.repository.MemberRepository;
