@@ -38,6 +38,10 @@ public class MemberJdbcRepository implements MemberRepository {
         jdbcUserDetailsManager.createUser(member);
     }
 
+    @Override
+    public void withDrawl(String memberName) {
+        jdbcUserDetailsManager.deleteUser(memberName);
+    }
 
     @Override
     public List<Member> findAll() {
