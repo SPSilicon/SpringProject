@@ -4,18 +4,58 @@
 
 
 # 사용 기술 
-<ul>
-<li> Mariadb</li>
-<li> Spring Boot 3</li>
-<li> Spring Security</li>
-<li> JWT </li>
-<li> ffmpeg 4.3 이상</li>
-<li> javascript </li>
-<li> sock.js </li>
-<li> webRTC</li>
-<li> bootstrap </li>
-</ul>
 
+### backend
+ * Mariadb
+ * JdbcTempate  
+ * Spring Boot 3
+ * Spring Security
+ * JWT 
+ * ffmpeg >= 4.3
+### frontend
+ * thymeleaf 
+ * javascript 
+ * sock.js 
+ * webRTC
+ * bootstrap 
+
+
+# 프로젝트 구조  
+
+##### config  
+└ Config.java   
+└ OAuth2LoginConfig.java   
+└ SecurityConfig.java   
+└ WebSocketConfig.java   
+##### controller  
+└ error  
+　└ CustomExceptionHandler.java  
+└ handler  
+　└ LoginSuccessHandler.java  
+　└ SocketWebmHandler.java  
+└ ArticleController.java  
+└ HomeController.java  
+└ MemberController.java  
+└ StreamController.java
+##### domain
+└ Article  
+└ KakaoOAuth2User  
+└ Member  
+└ Stream  
+##### filter  
+└ JwtAuthenticationFilter  
+##### repository  
+└ ArticleJdbcRepository  
+└ ArticleRepository  
+└ MemberRepository  
+└ MemberJdbcRepository  
+└ StreamRepository  
+└ StreamJdbcRepository  
+##### service  
+└ ArticleService  
+└ MemberService  
+└ StreamService  
+└ CustomOAuth2UserService  
 <h2>로그인, 회원가입</h2>  
 
 ![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
