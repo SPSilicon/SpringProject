@@ -73,6 +73,10 @@
 ##### /streams [GET]  
 <h2>로그인, 회원가입</h2>  
 
+![springLogin](https://user-images.githubusercontent.com/44769598/234212419-c9d4e117-03b3-4dae-b19b-f3378cbc1f18.svg)  
+
+![springMember](https://user-images.githubusercontent.com/44769598/234212446-d23ddfa2-9fe5-4fb5-aebc-3101deaa3bfb.svg)  
+
 ![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
 ### OAuth2 카카오 로그인 구현
 ##### 로그인 성공시 JWT 토큰 생성후 Cookie에 저장 이후 로그인 인증 필요시 쿠키 확인.
@@ -82,6 +86,7 @@
 
 <h2>글쓰기 삭제 수정 열람</h2>  
 
+![springArticle](https://user-images.githubusercontent.com/44769598/234212346-f537e706-b3d1-434e-917b-82f59de5ce7e.svg)  
 
 ### 글쓰기
 ![스크린샷(323)](https://user-images.githubusercontent.com/44769598/231677798-78fd1747-1fdc-4ca9-8938-0da6b8ff45c8.png)
@@ -95,6 +100,9 @@
 ![스크린샷(326)](https://user-images.githubusercontent.com/44769598/231678780-69a90223-5b66-47af-b7c5-40f319046d42.png)
 
 <h2>기기 영상/소리 녹음 장치 공유</h2>
+
+![springStream](https://user-images.githubusercontent.com/44769598/234212965-88dc4ac5-695d-41b6-8216-529af6775c3d.svg)
+
 
 <h3>webRTC</h3>
 
