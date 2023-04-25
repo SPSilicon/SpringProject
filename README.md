@@ -56,6 +56,21 @@
 └ MemberService  
 └ StreamService  
 └ CustomOAuth2UserService  
+
+# Endpoint Mappings
+
+##### /higlogin [GET]  
+##### /home [GET]  
+##### /member/register [POST]  
+##### /post [DELETE]  
+##### /post [GET]  
+##### /post [POST]  
+##### /post [PUT]  
+##### /post/add [GET]  
+##### /post/update [GET]  
+##### /stream/play/{streamName} [GET]  
+##### /stream/share [GET]  
+##### /streams [GET]  
 <h2>로그인, 회원가입</h2>  
 
 ![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
