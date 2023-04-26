@@ -57,6 +57,11 @@
 └ StreamService  
 └ CustomOAuth2UserService  
 
+
+# DB
+![springproj](https://user-images.githubusercontent.com/44769598/234611756-d6b1ca2d-009e-466d-95ea-b847d8cd56f3.svg)
+
+
 # Endpoint Mappings
 
 ##### /higlogin [GET]  
@@ -71,6 +76,7 @@
 ##### /stream/play/{streamName} [GET]  
 ##### /stream/share [GET]  
 ##### /streams [GET]  
+
 <h2>로그인, 회원가입</h2>  
 
 ![springLogin](https://user-images.githubusercontent.com/44769598/234212419-c9d4e117-03b3-4dae-b19b-f3378cbc1f18.svg)  
@@ -78,9 +84,11 @@
 ![springMember](https://user-images.githubusercontent.com/44769598/234212446-d23ddfa2-9fe5-4fb5-aebc-3101deaa3bfb.svg)  
 
 ![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
+
 ### OAuth2 카카오 로그인 구현
 ##### 로그인 성공시 JWT 토큰 생성후 Cookie에 저장 이후 로그인 인증 필요시 쿠키 확인.
 ### Remember me 미구현  
+
 ![캡처](https://user-images.githubusercontent.com/44769598/232427086-6f39e6a2-06c3-416e-8111-5888b6389c6b.PNG)  
 회원가입 시 cloudflare에서 제공하는 봇체크 사용  
 
