@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import com.hig.hwangingyu.controller.handler.LoginSuccessHandler;
 import com.hig.hwangingyu.controller.handler.SocketWebmHandler;
@@ -29,7 +30,11 @@ public class Config {
 
     public Config(DataSource dataSource) { this.dataSource = dataSource;}
 
-
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+        return new HiddenHttpMethodFilter();
+    }
+    
     @Bean
     public ArticleRepository articleRepository() {return new ArticleJdbcRepository(dataSource);}
 

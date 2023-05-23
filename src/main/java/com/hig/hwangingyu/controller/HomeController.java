@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +29,7 @@ import com.hig.hwangingyu.utils.JWTProvider;
 @Controller
 public class HomeController {
     private final ArticleService articleService;
-    
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public HomeController(ArticleService articleService) {
         this.articleService = articleService;
     }
@@ -69,8 +71,5 @@ public class HomeController {
         return "home.html";
     }
 
-    @GetMapping("live")
-    public String live() {
-        return "live.html";
-    }
+  
 }

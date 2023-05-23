@@ -7,6 +7,8 @@ import java.util.Optional;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.Nullable;
@@ -26,7 +28,8 @@ import com.hig.hwangingyu.service.StreamService;
 public class StreamController {
     
     private final StreamService streamService;
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     public StreamController(StreamService streamService) {
         this.streamService = streamService;
     }
