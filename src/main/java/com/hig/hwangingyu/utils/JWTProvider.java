@@ -32,23 +32,15 @@ public class JWTProvider {
     }
 
     public Optional<DecodedJWT> decode(String JWTtoken) {
-        //JWTVerifier verifier = JWT.require(algorithm)
-        //.withClaimPresence("username")
-        //.withClaimPresence("password") 비밀번호는 없음
-        //.withClaimPresence("auth")
-        //.build();
-
         DecodedJWT ret = JWT.decode(JWTtoken);
         if(ret.getExpiresAt().before(new Date())) {
             return Optional.empty();
         }
-
-        
+     
         return Optional.ofNullable(ret);
     }
 
     public Optional<DecodedJWT> getJWTfromCookies(Cookie[] cookies) {
-
         Optional<DecodedJWT> ret = Optional.empty();
         if(cookies!= null) {
                 for(Cookie c : cookies) {
