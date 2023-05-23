@@ -11,7 +11,8 @@
     <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <div class="container-xxl mt-5 text-center" style="max-height : 70%">
-        <form th:action="@{/post/update}" method="post">
+        <form th:action="@{/post}" method="post">
+            <input type="hidden" name="_method" value="put"/>
             <input class="form-control" type="hidden" name="id" th:value="${article.id}">
             <input class="form-control" type="hidden" name="author" th:value="${article.author}">
             <div class="row">
