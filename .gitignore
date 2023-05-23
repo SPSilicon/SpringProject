@@ -8,7 +8,8 @@ build/
 !build.gradle
 !gradlew
 !gradlew.bat
-**/application.properties
+**/application-DB.properties
+**/application-SECRET.properties
 
 ### STS ###
 .apt_generated
