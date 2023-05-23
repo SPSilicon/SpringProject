@@ -14,11 +14,6 @@ repositories {
 	gradlePluginPortal()
 }
 
-ext {
-   set('snakeyaml.version','1.32')
-   set('json-smart.version','2.4.10')
-}
-
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
