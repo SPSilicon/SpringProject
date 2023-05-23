@@ -4,26 +4,97 @@
 
 
 # 사용 기술 
-<ul>
-<li> Mariadb</li>
-<li> Spring Boot 3</li>
-<li> Spring Security</li>
-<li> JWT </li>
-<li> ffmpeg 4.3 이상</li>
-<li> javascript </li>
-<li> sock.js </li>
-<li> webRTC</li>
-<li> bootstrap </li>
-</ul>
+
+### backend
+ * Mariadb
+ * JdbcTempate  
+ * Spring Boot 3
+ * Spring Security
+ * JWT 
+ * ffmpeg >= 4.3
+### frontend
+ * thymeleaf 
+ * javascript 
+ * sock.js 
+ * webRTC
+ * bootstrap 
+
+
+# 프로젝트 구조  
+
+##### config  
+└ Config.java   
+└ OAuth2LoginConfig.java   
+└ SecurityConfig.java   
+└ WebSocketConfig.java   
+##### controller  
+└ error  
+　└ CustomExceptionHandler.java  
+└ handler  
+　└ LoginSuccessHandler.java  
+　└ SocketWebmHandler.java  
+└ ArticleController.java  
+└ HomeController.java  
+└ MemberController.java  
+└ StreamController.java
+##### domain
+└ Article  
+└ KakaoOAuth2User  
+└ Member  
+└ Stream  
+##### filter  
+└ JwtAuthenticationFilter  
+##### repository  
+└ ArticleJdbcRepository  
+└ ArticleRepository  
+└ MemberRepository  
+└ MemberJdbcRepository  
+└ StreamRepository  
+└ StreamJdbcRepository  
+##### service  
+└ ArticleService  
+└ MemberService  
+└ StreamService  
+└ CustomOAuth2UserService  
+
+
+# DB
+![springproj](https://user-images.githubusercontent.com/44769598/234611756-d6b1ca2d-009e-466d-95ea-b847d8cd56f3.svg)
+
+
+# Endpoint Mappings
+
+##### /higlogin [GET]  
+##### /home [GET]  
+##### /member/register [POST]  
+##### /post [DELETE]  
+##### /post [GET]  
+##### /post [POST]  
+##### /post [PUT]  
+##### /post/add [GET]  
+##### /post/update [GET]  
+##### /stream/play/{streamName} [GET]  
+##### /stream/share [GET]  
+##### /streams [GET]  
 
 <h2>로그인, 회원가입</h2>  
 
+![springLogin](https://user-images.githubusercontent.com/44769598/234212419-c9d4e117-03b3-4dae-b19b-f3378cbc1f18.svg)  
+
+![springMember](https://user-images.githubusercontent.com/44769598/234212446-d23ddfa2-9fe5-4fb5-aebc-3101deaa3bfb.svg)  
+
 ![스크린샷(321)](https://user-images.githubusercontent.com/44769598/231676783-97039bfe-3a6c-4424-ac11-bd3355a72860.png)  
+
 ### OAuth2 카카오 로그인 구현
 ##### 로그인 성공시 JWT 토큰 생성후 Cookie에 저장 이후 로그인 인증 필요시 쿠키 확인.
 ### Remember me 미구현  
+
+![캡처](https://user-images.githubusercontent.com/44769598/232427086-6f39e6a2-06c3-416e-8111-5888b6389c6b.PNG)  
+회원가입 시 cloudflare에서 제공하는 봇체크 사용  
+
 <h2>글쓰기 삭제 수정 열람</h2>  
 
+![springArticle](https://user-images.githubusercontent.com/44769598/234212346-f537e706-b3d1-434e-917b-82f59de5ce7e.svg)  
 
 ### 글쓰기
 ![스크린샷(323)](https://user-images.githubusercontent.com/44769598/231677798-78fd1747-1fdc-4ca9-8938-0da6b8ff45c8.png)
@@ -38,6 +109,9 @@
 
 <h2>기기 영상/소리 녹음 장치 공유</h2>
 
+![springStream](https://user-images.githubusercontent.com/44769598/234212965-88dc4ac5-695d-41b6-8216-529af6775c3d.svg)
+
+
 <h3>webRTC</h3>
 
 
@@ -50,13 +124,21 @@
 [ffmpeg documentation](https://ffmpeg.org/ffmpeg.html)
 
 
-<h3>sock.js</h3>
+<h3>sock.js</h3>  
+[sock.js github](https://github.com/sockjs/sockjs-client)  
 
-![스크린샷(327)](https://user-images.githubusercontent.com/44769598/231680811-12d848e0-ea3a-47fd-b9f8-089b87f15a6e.png)
-
+### 영상 캡쳐 페이지  
+![스크린샷(327)](https://user-images.githubusercontent.com/44769598/231680811-12d848e0-ea3a-47fd-b9f8-089b87f15a6e.png)  
 ![스크린샷(328)](https://user-images.githubusercontent.com/44769598/231680989-66259f4b-bd65-432c-af44-83ab72f890c7.png)
 
-[sock.js github](https://github.com/sockjs/sockjs-client)
+### 스트림 목록 페이지
+![캡처](https://user-images.githubusercontent.com/44769598/232487625-3a334daf-f68c-4104-a25e-180f50b119b9.PNG)
+
+### 영상 시청
+![캡처2](https://user-images.githubusercontent.com/44769598/232526253-8bd6e4c9-0c18-4296-8152-e66f0ce523d8.PNG)
+
+
+
 
 
 녹음 하기전, 브라우저와 spring서버를 websocket으로 연결
