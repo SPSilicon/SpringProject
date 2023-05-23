@@ -32,8 +32,6 @@ import java.util.List;
 @SpringBootTest
 @WebAppConfiguration
 class HwangingyuApplicationTests {
-
-	static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	StreamRepository streamRepository;
 	
@@ -49,6 +47,7 @@ class HwangingyuApplicationTests {
 
 	@BeforeEach
 	public void BeforeEach() {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		streamRepository = new FakeStreamRepository();
 		memberRepository = new FakeMemberRepository();
 		articleRepository = new FakeArticleRepository();
