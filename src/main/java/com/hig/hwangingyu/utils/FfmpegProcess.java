@@ -58,14 +58,15 @@ public class FfmpegProcess {
         streamFolder.mkdirs();
         log = new File(streamFolder + LOG_FILE_NAME);
 
-        String[] hlscmd = {                
-            "-hls_init_time", "2.002",
-            "-hls_time", "2.002",
-            "-hls_list_size", "20",
-            "-hls_flags", "delete_segments",
-            "-strftime", "1",
+        String[] hlscmd = {
+            "-lhls", "1",                
+            //"-hls_init_time", "2.002",
+            //"-hls_time", "2.002",
+            //"-hls_list_size", "20",
+            //"-hls_flags", "delete_segments",
+            //"-strftime", "1",
             "-var_stream_map", "a:0,agroup:a0,default:0 v:0,agroup:a0",
-            "-master_pl_name", "test.m3u8",
+            "-master_pl_name", "main.m3u8",
             "-f", "hls",
             streamFolder + HLS_FILE_NAME
         }; // hls 명령어
@@ -111,7 +112,7 @@ public class FfmpegProcess {
     public boolean destroy() {
         try {
             if(ffmpegProcess.isAlive()) {
-                ffmpegProcess.destroy();
+                ffmpegProcess.destroyForcibly();
             }
             
             if(log.exists()) {
