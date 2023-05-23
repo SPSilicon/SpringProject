@@ -24,9 +24,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.hig.hwangingyu.controller.handler.LoginSuccessHandler;
 import com.hig.hwangingyu.filter.JwtAuthenticationFilter;
-import com.hig.hwangingyu.handler.LoginSuccessHandler;
-
 import com.hig.hwangingyu.service.CustomOAuth2UserService;
 
 @Configuration

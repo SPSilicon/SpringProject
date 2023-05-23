@@ -18,7 +18,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-import com.hig.hwangingyu.handler.SocketWebmHandler;
+import com.hig.hwangingyu.controller.handler.SocketWebmHandler;
 
 @Configuration
 @EnableWebSocket
