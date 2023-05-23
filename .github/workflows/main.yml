@@ -11,6 +11,8 @@ jobs:
     permissions: 
       contents: write
     steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
       - name: Run snapshot action
         uses: mikepenz/gradle-dependency-submission@v0.8.6
         with:
