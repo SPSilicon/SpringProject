@@ -78,8 +78,8 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .invalidateHttpSession(false).deleteCookies("AUTHORIZATION")
                         .logoutSuccessUrl("/home"))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf((csrf) -> csrf.disable());
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                //.csrf((csrf) -> csrf.disable());
 
 
 
