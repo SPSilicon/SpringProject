@@ -28,13 +28,13 @@ public class StreamJdbcRepository implements StreamRepository{
 
     @Override
     public Page<Stream> searchByStreamer(Pageable page, String streamer) {
-        List<Stream> ret = jdbcTemplate.query("select * from streams where streamer LIKE '%"+streamer+"%' limit ? offset ?", streamRowMapper(),page.getPageSize(),page.getOffset());
+        List<Stream> ret = jdbcTemplate.query("select * from streams where streamer LIKE ? limit ? offset ?", streamRowMapper(),"%"+streamer+"%", page.getPageSize(),page.getOffset());
         return new PageImpl<Stream>(ret,page,getCount());
     }
     @Override
     public Page<Stream> findAll(Pageable page) {
 
-        List<Stream> ret = jdbcTemplate.query("select * from streams limit "+page.getPageSize() + " offset "+page.getOffset(), streamRowMapper());
+        List<Stream> ret = jdbcTemplate.query("select * from streams limit ? offset ?",streamRowMapper(),page.getPageSize(),page.getOffset());
         return new PageImpl<Stream>(ret, page, getCount());
     }
 

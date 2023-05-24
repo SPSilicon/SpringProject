@@ -1,5 +1,6 @@
 package com.hig.hwangingyu.repository;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,8 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public Page<Article> search(Pageable page, String query){
-        List<Article> ret = jdbcTemplate.query("select * from article where author LIKE '%"+query+"%' order by id DESC limit "+page.getPageSize() + " offset "+page.getOffset(), articleRowMapper());
+
+        List<Article> ret = jdbcTemplate.query("select * from article where author LIKE ? order by id DESC limit ? offset ?", articleRowMapper(), "%"+query+"%", page.getPageSize(), page.getOffset());
         return new PageImpl<Article>(ret, page, getCount());
     }
 
@@ -92,7 +94,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     public Page<Article> findAll(Pageable page) {
-        List<Article> ret = jdbcTemplate.query("select * from article order by id DESC limit "+page.getPageSize() + " offset "+page.getOffset(), articleRowMapper());
+        List<Article> ret = jdbcTemplate.query("select * from article order by id DESC limit ? offset ?", articleRowMapper(),page.getPageSize(), page.getOffset());
         return new PageImpl<Article>(ret, page, getCount());
     }
 
